@@ -29,6 +29,7 @@ import org.apache.flink.statefun.sdk.kafka.KafkaEgressBuilder;
 import org.apache.flink.statefun.sdk.kafka.KafkaEgressSerializer;
 import org.apache.flink.statefun.sdk.kafka.KafkaIngressBuilder;
 import org.apache.flink.statefun.sdk.kafka.KafkaIngressDeserializer;
+import org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -59,6 +60,7 @@ final class GreetingIO {
     return KafkaIngressBuilder.forIdentifier(GREETING_INGRESS_ID)
         .withKafkaAddress(kafkaAddress)
         .withTopic("names")
+        .withStartupPosition(KafkaIngressStartupPosition.fromEarliest())
         .withDeserializer(GreetKafkaDeserializer.class)
         .withProperty(ConsumerConfig.GROUP_ID_CONFIG, "greetings")
         .build();
