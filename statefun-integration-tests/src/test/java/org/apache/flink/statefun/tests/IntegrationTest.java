@@ -54,9 +54,9 @@ public class IntegrationTest {
       new ImageFromDockerfile("greeter-master")
           .withFileFromClasspath("Dockerfile", "Dockerfile")
           .withFileFromPath(
-              "target/statefun-greeter-example-1.1-SNAPSHOT.jar",
+              ".",
               Paths.get(
-                  "/Users/tzulitai/repos/apache/flink-statefun/statefun-examples/statefun-greeter-example/target/statefun-greeter-example-1.1-SNAPSHOT.jar"));
+                  "/Users/tzulitai/repos/apache/flink-statefun/statefun-examples/statefun-greeter-example/target/"));
 
   @Rule
   public KafkaContainer kafkaContainer =

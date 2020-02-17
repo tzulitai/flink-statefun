@@ -16,4 +16,4 @@
 FROM statefun
 
 RUN mkdir -p /opt/statefun/modules/statefun-greeter-example
-COPY target/statefun-greeter-example*jar /opt/statefun/modules/statefun-greeter-example/
+COPY statefun-greeter-example*jar /opt/statefun/modules/statefun-greeter-example/
