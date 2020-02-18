@@ -44,7 +44,7 @@ import org.testcontainers.containers.Network;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 
 /** Created by tzulitai on 2020/2/8. */
-public class IntegrationTest {
+public class SanityCheckITCase {
 
   private static final String CONFLUENT_PLATFORM_VERSION = "5.0.3";
 
