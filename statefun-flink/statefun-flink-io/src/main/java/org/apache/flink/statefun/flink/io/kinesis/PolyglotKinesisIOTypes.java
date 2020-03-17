@@ -15,16 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.flink.statefun.sdk.kafka;
 
-import org.apache.flink.statefun.sdk.EgressType;
+package org.apache.flink.statefun.flink.io.kinesis;
+
 import org.apache.flink.statefun.sdk.IngressType;
 
-public final class Constants {
-  public static final IngressType KAFKA_INGRESS_TYPE =
-      new IngressType("statefun.kafka.io", "universal-ingress");
-  public static final EgressType KAFKA_EGRESS_TYPE =
-      new EgressType("statefun.kafka.io", "universal-egress");
+public final class PolyglotKinesisIOTypes {
 
-  private Constants() {}
+  private PolyglotKinesisIOTypes() {}
+
+  public static final IngressType ROUTABLE_PROTOBUF_KINESIS_INGRESS_TYPE =
+      new IngressType("statefun.kinesis.io", "routable-protobuf-ingress");
 }
