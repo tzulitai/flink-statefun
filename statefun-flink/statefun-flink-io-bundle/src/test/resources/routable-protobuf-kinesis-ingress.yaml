@@ -19,7 +19,7 @@ ingress:
     id: com.mycomp.foo/bar
   spec:
     awsRegion:
-      type: named
+      type: specific
       id: us-west-2
     awsCredentials:
       type: basic
@@ -38,5 +38,5 @@ ingress:
         targets:
           - com.mycomp.foo/function-2
     clientConfigProperties:
-      - SocketTimeout: 9999
-      - MaxConnections: 15
+      - SocketTimeout: "9999"
+      - MaxConnections: "15"
