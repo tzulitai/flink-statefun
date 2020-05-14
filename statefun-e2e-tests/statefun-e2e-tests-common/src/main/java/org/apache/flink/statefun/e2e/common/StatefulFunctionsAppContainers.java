@@ -149,11 +149,7 @@ public final class StatefulFunctionsAppContainers extends ExternalResource {
     master.stop();
     workers.forEach(GenericContainer::stop);
 
-    try {
-      FileUtils.deleteDirectory(checkpointDir);
-    } catch (Exception e) {
-      throw new RuntimeException("Error cleaning up temporary checkpoint directory", e);
-    }
+    FileUtils.deleteDirectoryQuietly(checkpointDir);
   }
 
   /** @return the exposed port on master for calling REST APIs. */
