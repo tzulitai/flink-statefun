@@ -22,14 +22,20 @@ import java.net.URL;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.apache.flink.annotation.VisibleForTesting;
+import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonPointer;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.flink.statefun.flink.common.ResourceLocator;
+import org.apache.flink.statefun.flink.common.json.Selectors;
 import org.apache.flink.statefun.flink.core.spi.Constants;
 import org.apache.flink.statefun.sdk.spi.StatefulFunctionModule;
 
 public final class JsonServiceLoader {
+
+  private static final JsonPointer FORMAT_VERSION = JsonPointer.compile("/version");
+  private static final JsonPointer MODULE_META_TYPE = JsonPointer.compile("/module/meta/type");
+  private static final JsonPointer MODULE_SPEC = JsonPointer.compile("/module/spec");
 
   public static Iterable<StatefulFunctionModule> load() {
     ObjectMapper mapper = mapper();
@@ -46,7 +52,7 @@ public final class JsonServiceLoader {
   static StatefulFunctionModule fromUrl(ObjectMapper mapper, URL moduleUrl) {
     try {
       JsonNode root = readAndValidateModuleTree(mapper, moduleUrl);
-      return new JsonModule(JsonModuleSpecParserFactory.create(root), moduleUrl);
+      return new JsonModule(moduleSpecNode(root), formatVersion(root), moduleUrl);
     } catch (Throwable t) {
       throw new RuntimeException("Failed loading a module at " + moduleUrl, t);
     }
@@ -74,7 +80,7 @@ public final class JsonServiceLoader {
   }
 
   private static void validateMeta(URL moduleYamlFile, JsonNode root) {
-    JsonNode typeNode = root.at(Pointers.MODULE_META_TYPE);
+    JsonNode typeNode = root.at(MODULE_META_TYPE);
     if (typeNode.isMissingNode()) {
       throw new IllegalStateException("Unable to find a module type in " + moduleYamlFile);
     }
@@ -88,9 +94,18 @@ public final class JsonServiceLoader {
   }
 
   private static void validateSpec(URL moduleYamlFile, JsonNode root) {
-    if (root.at(Pointers.MODULE_SPEC).isMissingNode()) {
+    if (root.at(MODULE_SPEC).isMissingNode()) {
       throw new IllegalStateException("A module without a spec at " + moduleYamlFile);
     }
+  }
+
+  private static JsonNode moduleSpecNode(JsonNode root) {
+    return root.at(MODULE_SPEC);
+  }
+
+  private static FormatVersion formatVersion(JsonNode root) {
+    String versionStr = Selectors.textAt(root, FORMAT_VERSION);
+    return FormatVersion.fromString(versionStr);
   }
 
   @VisibleForTesting

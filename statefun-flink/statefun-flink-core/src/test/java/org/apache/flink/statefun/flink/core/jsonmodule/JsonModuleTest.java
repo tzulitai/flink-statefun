@@ -22,12 +22,10 @@ import static org.junit.Assert.assertThat;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.Message;
-import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.JsonNode;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.statefun.flink.core.StatefulFunctionsUniverse;
 import org.apache.flink.statefun.flink.core.message.MessageFactoryType;
@@ -116,13 +114,7 @@ public class JsonModuleTest {
     URL moduleUrl = JsonModuleTest.class.getClassLoader().getResource(path);
     assertThat(moduleUrl, not(nullValue()));
     ObjectMapper mapper = JsonServiceLoader.mapper();
-    final JsonNode json;
-    try {
-      json = mapper.readTree(moduleUrl);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    return new JsonModule(JsonModuleSpecParserFactory.create(json), moduleUrl);
+    return JsonServiceLoader.fromUrl(mapper, moduleUrl);
   }
 
   private static StatefulFunctionsUniverse emptyUniverse() {
