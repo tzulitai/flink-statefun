@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -72,6 +73,20 @@ public class StateBinderTest {
     binderUnderTest.bind(TestUtils.FUNCTION_TYPE, new ChildClass());
 
     assertThat(state.boundNames, hasItems("parent", "child"));
+  }
+
+  @Test
+  public void collectionClass() {
+    binderUnderTest.bind(TestUtils.FUNCTION_TYPE, new CollectionClass());
+
+    assertThat(state.boundNames, hasItems("outerCollection", "inner"));
+  }
+
+  @Test
+  public void mapClass() {
+    binderUnderTest.bind(TestUtils.FUNCTION_TYPE, new MapClass());
+
+    assertThat(state.boundNames, hasItems("outerMap", "inner"));
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -164,6 +179,23 @@ public class StateBinderTest {
     @Persisted
     @SuppressWarnings("unused")
     InnerClass innerClass = new InnerClass();
+  }
+
+  static final class CollectionClass {
+    @Persisted
+    @SuppressWarnings("unused")
+    List<Object> values =
+        Arrays.asList(PersistedValue.of("outerCollection", String.class), new InnerClass());
+  }
+
+  static final class MapClass {
+    @Persisted Map<String, Object> valuesMap;
+
+    MapClass() {
+      valuesMap = new HashMap<>();
+      valuesMap.put("foo", PersistedValue.of("outerMap", String.class));
+      valuesMap.put("bar", new InnerClass());
+    }
   }
 
   private static final class FakeState implements State {

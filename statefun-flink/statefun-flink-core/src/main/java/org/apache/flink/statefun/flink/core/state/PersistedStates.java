@@ -22,7 +22,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,15 +65,35 @@ final class PersistedStates {
               + instance.getClass().getName());
     }
     Object persistedState = getPersistedStateReflectively(instance, field);
-    if (persistedState == null) {
-      throw new IllegalStateException(
-          "The field " + field + " of a " + instance.getClass().getName() + " was not initialized");
+    try {
+      visitPersistedStateObject(persistedState);
+    } catch (NullPersistedStateObjectException e) {
+      throw new NullPersistedStateObjectException(
+          "The field "
+              + field
+              + " of a "
+              + instance.getClass().getName()
+              + " contains a NULL state object. Either the field was not initialized, or it contains an inner nested object that is NULL.");
     }
-    Class<?> fieldType = field.getType();
-    if (isPersistedState(fieldType)) {
-      persistedStates.add(persistedState);
+  }
+
+  private void visitPersistedStateObject(Object stateObject) {
+    if (stateObject == null) {
+      throw new NullPersistedStateObjectException();
+    }
+
+    final Class<?> stateObjectType = stateObject.getClass();
+    if (isPersistedState(stateObjectType)) {
+      persistedStates.add(stateObject);
+    } else if (isCollectionOfPersistedStates(stateObjectType)) {
+      final Collection<?> casted = (Collection<?>) stateObject;
+      casted.forEach(this::visitPersistedStateObject);
+    } else if (isMapOfPersistedStates(stateObjectType)) {
+      final Map<?, ?> casted = (Map<?, ?>) stateObject;
+      casted.values().forEach(this::visitPersistedStateObject);
     } else {
-      List<?> innerFields = findReflectively(persistedState);
+      // treat as an object containing @Persisted fields
+      final List<?> innerFields = findReflectively(stateObject);
       persistedStates.addAll(innerFields);
     }
   }
@@ -80,6 +102,14 @@ final class PersistedStates {
     return fieldType == PersistedValue.class
         || fieldType == PersistedTable.class
         || fieldType == PersistedAppendingBuffer.class;
+  }
+
+  private static boolean isCollectionOfPersistedStates(Class<?> fieldType) {
+    return Collection.class.isAssignableFrom(fieldType);
+  }
+
+  private static boolean isMapOfPersistedStates(Class<?> fieldType) {
+    return Map.class.isAssignableFrom(fieldType);
   }
 
   private static Object getPersistedStateReflectively(Object instance, Field persistedField) {
@@ -92,7 +122,7 @@ final class PersistedStates {
     }
   }
 
-  public static Iterable<Field> findAnnotatedFields(
+  private static Iterable<Field> findAnnotatedFields(
       Class<?> javaClass, Class<? extends Annotation> annotation) {
     Stream<Field> fields =
         definedFields(javaClass).filter(field -> field.getAnnotation(annotation) != null);
@@ -107,5 +137,17 @@ final class PersistedStates {
     Stream<Field> selfMethods = Arrays.stream(javaClass.getDeclaredFields());
     Stream<Field> superMethods = definedFields(javaClass.getSuperclass());
     return Stream.concat(selfMethods, superMethods);
+  }
+
+  private static class NullPersistedStateObjectException extends IllegalStateException {
+    private static final long serialVersionUID = 1L;
+
+    private NullPersistedStateObjectException() {
+      super();
+    }
+
+    private NullPersistedStateObjectException(String msg) {
+      super(msg);
+    }
   }
 }
