@@ -137,8 +137,24 @@ message FromFunction {
         repeated EgressMessage outgoing_egresses = 4;
     }
 
+    message MissingPersistedValue {
+        enum ExpireMode {
+            NONE = 0;
+            AFTER_WRITE = 1;
+            AFTER_INVOKE = 2;
+        }
+        string state_name = 1;
+        ExpireMode expire_mode = 2;
+        int64 expire_after_millis = 3;
+    }
+
+    message RetryInvocationRequest {
+        repeated MissingPersistedValue missing_values = 1;
+    }
+
     oneof response {
         InvocationResponse invocation_result = 100;
+        RetryInvocationRequest retry_request = 101;
     }
 }
 
