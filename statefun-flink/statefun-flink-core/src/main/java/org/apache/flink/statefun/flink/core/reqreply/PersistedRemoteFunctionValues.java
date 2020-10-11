@@ -18,13 +18,16 @@
 
 package org.apache.flink.statefun.flink.core.reqreply;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import org.apache.flink.statefun.flink.core.httpfn.StateSpec;
+import org.apache.flink.statefun.flink.core.polyglot.generated.FromFunction.MissingPersistedValue;
 import org.apache.flink.statefun.sdk.annotations.Persisted;
+import org.apache.flink.statefun.sdk.state.Expiration;
 import org.apache.flink.statefun.sdk.state.PersistedStateRegistry;
 import org.apache.flink.statefun.sdk.state.PersistedValue;
 
@@ -50,6 +53,40 @@ public final class PersistedRemoteFunctionValues {
 
   void clearValue(String stateName) {
     getStateHandleOrThrow(stateName).clear();
+  }
+
+  void addNewStateHandles(List<MissingPersistedValue> missingPersistedValues) {
+    missingPersistedValues.forEach(this::createAndRegisterValueStateIfAbsent);
+  }
+
+  private void createAndRegisterValueStateIfAbsent(MissingPersistedValue missingPersistedValue) {
+    final String stateName = missingPersistedValue.getStateName();
+
+    if (!managedStates.containsKey(stateName)) {
+      final PersistedValue<byte[]> stateValue =
+          PersistedValue.of(
+              stateName,
+              byte[].class,
+              sdkTtlExpiration(
+                  missingPersistedValue.getExpireAfterMillis(),
+                  missingPersistedValue.getExpireMode()));
+      stateRegistry.registerValue(stateValue);
+      managedStates.put(stateName, stateValue);
+    }
+  }
+
+  private static Expiration sdkTtlExpiration(
+      long expirationTtlMillis, MissingPersistedValue.ExpireMode expireMode) {
+    switch (expireMode) {
+      case AFTER_INVOKE:
+        return Expiration.expireAfterReadingOrWriting(Duration.ofMillis(expirationTtlMillis));
+      case AFTER_WRITE:
+        return Expiration.expireAfterWriting(Duration.ofMillis(expirationTtlMillis));
+      case NONE:
+        return Expiration.none();
+      default:
+        throw new IllegalStateException("Safe guard");
+    }
   }
 
   private void createAndRegisterValueState(StateSpec stateSpec) {
