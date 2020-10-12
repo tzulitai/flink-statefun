@@ -31,6 +31,7 @@ import org.apache.flink.statefun.flink.core.metrics.RemoteInvocationMetrics;
 import org.apache.flink.statefun.flink.core.polyglot.generated.FromFunction;
 import org.apache.flink.statefun.flink.core.polyglot.generated.FromFunction.EgressMessage;
 import org.apache.flink.statefun.flink.core.polyglot.generated.FromFunction.InvocationResponse;
+import org.apache.flink.statefun.flink.core.polyglot.generated.FromFunction.RetryInvocationRequest;
 import org.apache.flink.statefun.flink.core.polyglot.generated.ToFunction;
 import org.apache.flink.statefun.flink.core.polyglot.generated.ToFunction.Invocation;
 import org.apache.flink.statefun.flink.core.polyglot.generated.ToFunction.InvocationBatchRequest;
@@ -125,35 +126,53 @@ public final class RequestReplyFunction implements StatefulFunction {
       sendToFunction(context, batch);
       return;
     }
-    InvocationResponse invocationResult = unpackInvocationOrThrow(context.self(), asyncResult);
-    handleInvocationResponse(context, invocationResult);
+    if (asyncResult.failure()) {
+      throw new IllegalStateException(
+          "Failure forwarding a message to a remote function " + context.self(),
+          asyncResult.throwable());
+    }
 
-    final int numBatched = requestState.getOrDefault(-1);
-    if (numBatched < 0) {
-      throw new IllegalStateException("Got an unexpected async result");
-    } else if (numBatched == 0) {
-      requestState.clear();
+    FromFunction fromFunction = asyncResult.value();
+    if (isRetryInvocationRequest(fromFunction)) {
+      RetryInvocationRequest retryInvocationRequest = unpackRetryInvocationRequest(fromFunction);
+      managedStates.addNewStateHandles(retryInvocationRequest.getMissingValuesList());
+
+      final InvocationBatchRequest.Builder retryBatch = createRetryBatch(asyncResult.metadata());
+      sendToFunction(context, retryBatch);
     } else {
-      final InvocationBatchRequest.Builder nextBatch = getNextBatch();
-      // an async request was just completed, but while it was in flight we have
-      // accumulated a batch, we now proceed with:
-      // a) clearing the batch from our own persisted state (the batch moves to the async operation
-      // state)
-      // b) sending the accumulated batch to the remote function.
-      requestState.set(0);
-      batch.clear();
-      context.functionTypeMetrics().consumeBacklogMessages(numBatched);
-      sendToFunction(context, nextBatch);
+      InvocationResponse invocationResult = unpackInvocationResponse(fromFunction);
+      handleInvocationResponse(context, invocationResult);
+
+      final int numBatched = requestState.getOrDefault(-1);
+      if (numBatched < 0) {
+        throw new IllegalStateException("Got an unexpected async result");
+      } else if (numBatched == 0) {
+        requestState.clear();
+      } else {
+        final InvocationBatchRequest.Builder nextBatch = getNextBatch();
+        // an async request was just completed, but while it was in flight we have
+        // accumulated a batch, we now proceed with:
+        // a) clearing the batch from our own persisted state (the batch moves to the async
+        // operation
+        // state)
+        // b) sending the accumulated batch to the remote function.
+        requestState.set(0);
+        batch.clear();
+        context.functionTypeMetrics().consumeBacklogMessages(numBatched);
+        sendToFunction(context, nextBatch);
+      }
     }
   }
 
-  private InvocationResponse unpackInvocationOrThrow(
-      Address self, AsyncOperationResult<ToFunction, FromFunction> result) {
-    if (result.failure()) {
-      throw new IllegalStateException(
-          "Failure forwarding a message to a remote function " + self, result.throwable());
-    }
-    FromFunction fromFunction = result.value();
+  private boolean isRetryInvocationRequest(FromFunction fromFunction) {
+    return fromFunction.hasRetryRequest();
+  }
+
+  private RetryInvocationRequest unpackRetryInvocationRequest(FromFunction fromFunction) {
+    return fromFunction.getRetryRequest();
+  }
+
+  private InvocationResponse unpackInvocationResponse(FromFunction fromFunction) {
     if (fromFunction.hasInvocationResult()) {
       return fromFunction.getInvocationResult();
     }
@@ -164,6 +183,12 @@ public final class RequestReplyFunction implements StatefulFunction {
     InvocationBatchRequest.Builder builder = InvocationBatchRequest.newBuilder();
     Iterable<Invocation> view = batch.view();
     builder.addAllInvocations(view);
+    return builder;
+  }
+
+  private InvocationBatchRequest.Builder createRetryBatch(ToFunction toFunction) {
+    InvocationBatchRequest.Builder builder = InvocationBatchRequest.newBuilder();
+    builder.addAllInvocations(toFunction.getInvocation().getInvocationsList());
     return builder;
   }
 
