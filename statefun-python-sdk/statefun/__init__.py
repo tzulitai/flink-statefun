@@ -17,6 +17,9 @@
 ################################################################################
 
 from statefun.core import StatefulFunctions
+from statefun.core import PersistedValue
+from statefun.core import Expiration
+
 from statefun.request_reply import RequestReplyHandler
 from statefun.request_reply import AsyncRequestReplyHandler
 

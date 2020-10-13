@@ -21,6 +21,7 @@ from google.protobuf.any_pb2 import Any
 
 from statefun.core import SdkAddress
 from statefun.core import AnyStateHandle
+from statefun.core import Expiration
 from statefun.core import parse_typename
 
 # generated function protocol
@@ -29,25 +30,14 @@ from statefun.request_reply_pb2 import ToFunction
 
 
 class InvocationContext:
-    def __init__(self, functions):
-        self.functions = functions
+    def __init__(self):
         self.batch = None
         self.context = None
         self.target_function = None
 
-    def setup(self, request_bytes):
-        to_function = ToFunction()
-        to_function.ParseFromString(request_bytes)
-        #
-        # setup
-        #
-        context = BatchContext(to_function.invocation.target, to_function.invocation.state)
-        target_function = self.functions.for_type(context.address.namespace, context.address.type)
-        if target_function is None:
-            raise ValueError("Unable to find a function of type ", target_function)
-
-        self.batch = to_function.invocation.invocations
-        self.context = context
+    def setup(self, target_addr, target_function, state, invocations_batch):
+        self.batch = invocations_batch
+        self.context = BatchContext(target_addr, state)
         self.target_function = target_function
 
     def complete(self):
@@ -116,15 +106,82 @@ class InvocationContext:
             outgoing.argument.CopyFrom(message)
 
 
-class RequestReplyHandler:
+class RequestReplyHandlerBase:
     def __init__(self, functions):
-        self.invocation_context = InvocationContext(functions)
+        self.functions = functions
+        self.invocation_context = InvocationContext()
+
+    def get_function(self, target_addr):
+        target_function = self.functions.for_type(
+            target_addr.namespace,
+            target_addr.type)
+        if target_function is None:
+            raise ValueError("Unable to find a function of type ", target_addr)
+        return target_function
+
+    @staticmethod
+    def parse_request(request_bytes):
+        to_function = ToFunction()
+        to_function.ParseFromString(request_bytes)
+        return to_function
+
+    @staticmethod
+    def provided_states(to_function: ToFunction):
+        return {s.state_name: AnyStateHandle(s.state_value) for s in to_function.invocation.state}
+
+    @staticmethod
+    def resolve_persisted_values(provided_states, target_function):
+        missing_persisted_values = []
+        resolved_state_values = {}
+        declared_state_values = target_function.state_values
+        if declared_state_values:
+            for state in declared_state_values:
+                if state.state_name not in provided_states:
+                    missing_persisted_values.append(state)
+                else:
+                    resolved_state_values[state.state_name] = provided_states[state.state_name]
+        return missing_persisted_values, resolved_state_values
+
+    @staticmethod
+    def retry_request(missing_persisted_values):
+        from_function = FromFunction()
+        retry_request = from_function.retry_request
+        missing_values = retry_request.missing_values
+        for mpv in missing_persisted_values:
+            missing_value = missing_values.add()
+            missing_value.state_name = mpv.state_name
+            ttl = mpv.state_ttl
+            if not ttl:
+                missing_value.expire_mode = FromFunction.MissingPersistedValue.ExpireMode.NONE
+            else:
+                if ttl.expire_mode is Expiration.Mode.AFTER_INVOKE:
+                    missing_value.expire_mode = FromFunction.MissingPersistedValue.ExpireMode.AFTER_INVOKE
+                elif ttl.expire_mode is Expiration.Mode.AFTER_WRITE:
+                    missing_value.expire_mode = FromFunction.MissingPersistedValue.ExpireMode.AFTER_WRITE
+                else:
+                    raise ValueError("Safe guard; invalid expire mode: " + ttl.expire_mode)
+                missing_value.expire_after_millis = ttl.expire_after_millis
+        return from_function.SerializeToString()
+
+
+class RequestReplyHandler(RequestReplyHandlerBase):
 
     def __call__(self, request_bytes):
-        ic = self.invocation_context
-        ic.setup(request_bytes)
-        self.handle_invocation(ic)
-        return ic.complete()
+        to_function = super().parse_request(request_bytes)
+        target_function = super().get_function(to_function.invocation.target)
+        provided_states = super().provided_states(to_function)
+        missing_persisted_values, resolved_persisted_values = super().resolve_persisted_values(provided_states, target_function)
+        if not missing_persisted_values:
+            ic = self.invocation_context
+            ic.setup(
+                to_function.invocation.target,
+                target_function,
+                resolved_persisted_values,
+                to_function.invocation.invocations)
+            self.handle_invocation(ic)
+            return ic.complete()
+        else:
+            return self.retry_request(missing_persisted_values)
 
     @staticmethod
     def handle_invocation(ic: InvocationContext):
@@ -141,15 +198,24 @@ class RequestReplyHandler:
                 fun(context, unpacked)
 
 
-class AsyncRequestReplyHandler:
-    def __init__(self, functions):
-        self.invocation_context = InvocationContext(functions)
+class AsyncRequestReplyHandler(RequestReplyHandlerBase):
 
     async def __call__(self, request_bytes):
-        ic = self.invocation_context
-        ic.setup(request_bytes)
-        await self.handle_invocation(ic)
-        return ic.complete()
+        to_function = super().parse_request(request_bytes)
+        target_function = super().get_function(to_function.invocation.target)
+        provided_states = super().provided_states(to_function)
+        missing_persisted_values, resolved_persisted_values = super().resolve_persisted_values(provided_states, target_function)
+        if not missing_persisted_values:
+            ic = self.invocation_context
+            ic.setup(
+                to_function.invocation.target,
+                target_function,
+                resolved_persisted_values,
+                to_function.invocation.invocations)
+            await self.handle_invocation(ic)
+            return ic.complete()
+        else:
+            return self.retry_request(missing_persisted_values)
 
     @staticmethod
     async def handle_invocation(ic: InvocationContext):
@@ -169,7 +235,7 @@ class AsyncRequestReplyHandler:
 class BatchContext(object):
     def __init__(self, target, states):
         # populate the state store with the eager state values provided in the batch
-        self.states = {s.state_name: AnyStateHandle(s.state_value) for s in states}
+        self.states = states
         # remember own address
         self.address = SdkAddress(target.namespace, target.type, target.id)
         # the caller address would be set for each individual invocation in the batch
@@ -193,7 +259,7 @@ class BatchContext(object):
 
     def state(self, name):
         if name not in self.states:
-            raise KeyError('unknown state name ' + name + ', states needed to be explicitly registered in module.yaml')
+            raise KeyError('unknown state name [' + name + '], states needed to be explicitly provided when binding the function')
         return self.states[name]
 
     def __getitem__(self, name):
