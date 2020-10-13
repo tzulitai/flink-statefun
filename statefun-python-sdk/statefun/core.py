@@ -19,6 +19,9 @@
 from google.protobuf.any_pb2 import Any
 import inspect
 
+from enum import Enum
+from typing import List
+
 from statefun.kafka_egress_pb2 import KafkaProducerRecord
 from statefun.kinesis_egress_pb2 import KinesisEgressRecord
 
@@ -93,10 +96,27 @@ class AnyStateHandle(object):
         self.modified = True
 
 
+class Expiration(object):
+    class Mode(Enum):
+        AFTER_INVOKE = 0
+        AFTER_WRITE = 1
+
+    def __init__(self, expire_after_millis, expire_mode: Mode = Mode.AFTER_INVOKE):
+        self.expire_after_millis = expire_after_millis
+        self.expire_mode = expire_mode
+
+
+class PersistedValue(object):
+    def __init__(self, state_name, state_ttl=None):
+        self.state_name = state_name
+        self.state_ttl = state_ttl
+
+
 class StatefulFunction(object):
-    def __init__(self, fun, expected_messages=None):
+    def __init__(self, fun, state_values, expected_messages=None):
         self.known_messages = expected_messages[:] if expected_messages else None
         self.func = fun
+        self.state_values = state_values
         if not fun:
             raise ValueError("function code is missing.")
 
@@ -158,15 +178,15 @@ class StatefulFunctions:
     def __init__(self):
         self.functions = {}
 
-    def register(self, typename: str, fun):
+    def register(self, typename: str, fun, persisted_values: List[PersistedValue]):
         """registers a StatefulFunction function instance, under the given namespace with the given function type. """
         if fun is None:
             raise ValueError("function instance must be provided")
         namespace, type = parse_typename(typename)
         expected_messages = deduce_protobuf_types(fun)
-        self.functions[(namespace, type)] = StatefulFunction(fun, expected_messages)
+        self.functions[(namespace, type)] = StatefulFunction(fun, persisted_values, expected_messages)
 
-    def bind(self, typename):
+    def bind(self, typename, persisted_values: List[PersistedValue] = None):
         """wraps a StatefulFunction instance with a given namespace and type.
            for example:
             s = StateFun()
@@ -180,7 +200,7 @@ class StatefulFunctions:
          """
 
         def wrapper(function):
-            self.register(typename, function)
+            self.register(typename, function, persisted_values)
             return function
 
         return wrapper
