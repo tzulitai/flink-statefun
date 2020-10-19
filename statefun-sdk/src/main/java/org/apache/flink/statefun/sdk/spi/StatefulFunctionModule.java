@@ -101,6 +101,8 @@ public interface StatefulFunctionModule {
      */
     void bindFunctionProvider(FunctionType functionType, StatefulFunctionProvider provider);
 
+    void bindFunctionProvider(String functionNamespace, StatefulFunctionProvider provider);
+
     /**
      * Binds a {@link Router} for a given ingress to the Stateful Functions application.
      *

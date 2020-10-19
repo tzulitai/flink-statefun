@@ -76,8 +76,6 @@ public class ExactlyOnceWithRemoteFnE2E {
   private static final String INVOKE_TOPIC = "invoke";
   private static final String INVOKE_RESULTS_TOPIC = "invoke-results";
 
-  private static final String REMOTE_FUNCTION_HOST = "remote-function";
-
   private static final int NUM_WORKERS = 2;
 
   @Rule
@@ -88,16 +86,23 @@ public class ExactlyOnceWithRemoteFnE2E {
           .withEnv("KAFKA_TRANSACTION_STATE_LOG_MIN_ISR", "1");
 
   @Rule
-  public GenericContainer<?> remoteFunction =
-      new GenericContainer<>(remoteFunctionImage())
-          .withNetworkAliases(REMOTE_FUNCTION_HOST)
+  public GenericContainer<?> counterFunction =
+      new GenericContainer<>(remoteFunctionImage("counter"))
+          .withNetworkAliases("counter")
+          .withLogConsumer(new Slf4jLogConsumer(LOG));
+
+  @Rule
+  public GenericContainer<?> forwarderFunction =
+      new GenericContainer<>(remoteFunctionImage("forwarder"))
+          .withNetworkAliases("forwarder")
           .withLogConsumer(new Slf4jLogConsumer(LOG));
 
   @Rule
   public StatefulFunctionsAppContainers verificationApp =
       StatefulFunctionsAppContainers.builder("remote-module-verification", NUM_WORKERS)
           .dependsOn(kafka)
-          .dependsOn(remoteFunction)
+          .dependsOn(counterFunction)
+          .dependsOn(forwarderFunction)
           .exposeMasterLogs(LOG)
           .withBuildContextFileFromClasspath("remote-module", "/remote-module/")
           .build();
@@ -133,22 +138,22 @@ public class ExactlyOnceWithRemoteFnE2E {
             is(invokeResult("foo", 3)), is(invokeResult("foo", 4)), is(invokeResult("bar", 2))));
   }
 
-  private static ImageFromDockerfile remoteFunctionImage() {
-    final Path pythonSourcePath = remoteFunctionPythonSourcePath();
+  private static ImageFromDockerfile remoteFunctionImage(String directory) {
+    final Path pythonSourcePath = remoteFunctionPythonSourcePath(directory);
     LOG.info("Building remote function image with Python source at: {}", pythonSourcePath);
 
     final Path pythonSdkPath = pythonSdkPath();
     LOG.info("Located built Python SDK at: {}", pythonSdkPath);
 
-    return new ImageFromDockerfile("remote-function")
-        .withFileFromClasspath("Dockerfile", "Dockerfile.remote-function")
+    return new ImageFromDockerfile("remote-function-" + directory)
+        .withFileFromClasspath("Dockerfile", "Dockerfile." + directory + "-function")
         .withFileFromPath("source/", pythonSourcePath)
         .withFileFromClasspath("requirements.txt", "requirements.txt")
         .withFileFromPath("python-sdk/", pythonSdkPath);
   }
 
-  private static Path remoteFunctionPythonSourcePath() {
-    return Paths.get(System.getProperty("user.dir") + "/src/main/python");
+  private static Path remoteFunctionPythonSourcePath(String directory) {
+    return Paths.get(System.getProperty("user.dir") + "/src/main/python/" + directory);
   }
 
   private static Path pythonSdkPath() {

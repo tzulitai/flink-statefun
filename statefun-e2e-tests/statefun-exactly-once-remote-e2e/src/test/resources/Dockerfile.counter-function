@@ -25,10 +25,10 @@ RUN pip install apache_flink_statefun-*-py3-none-any.whl
 COPY requirements.txt /app
 RUN pip install -r requirements.txt
 
-COPY source/functions.py /app
+COPY source/counter_fn.py /app
 COPY source/remote_module_verification_pb2.py /app
 
 EXPOSE 8000
 
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "-w 1", "functions:app"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "-w 1", "counter_fn:app"]
 

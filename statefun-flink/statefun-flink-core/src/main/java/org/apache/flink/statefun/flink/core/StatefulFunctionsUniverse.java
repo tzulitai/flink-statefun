@@ -48,6 +48,7 @@ public final class StatefulFunctionsUniverse
   private final Map<FunctionType, StatefulFunctionProvider> functions = new HashMap<>();
   private final Map<IngressType, SourceProvider> sources = new HashMap<>();
   private final Map<EgressType, SinkProvider> sinks = new HashMap<>();
+  private final Map<String, StatefulFunctionProvider> functionNamespaces = new HashMap<>();
 
   private final StaticallyRegisteredTypes types;
   private final MessageFactoryKey messageFactoryKey;
@@ -89,6 +90,13 @@ public final class StatefulFunctionsUniverse
   }
 
   @Override
+  public void bindFunctionProvider(String functionNamespace, StatefulFunctionProvider provider) {
+    Objects.requireNonNull(functionNamespace);
+    Objects.requireNonNull(provider);
+    putAndThrowIfPresent(functionNamespaces, functionNamespace, provider);
+  }
+
+  @Override
   public void bindSourceProvider(IngressType type, SourceProvider provider) {
     Objects.requireNonNull(type);
     Objects.requireNonNull(provider);
@@ -115,6 +123,10 @@ public final class StatefulFunctionsUniverse
 
   public Map<FunctionType, StatefulFunctionProvider> functions() {
     return functions;
+  }
+
+  public Map<String, StatefulFunctionProvider> namespaceFunctionProviders() {
+    return functionNamespaces;
   }
 
   public Map<IngressType, SourceProvider> sources() {

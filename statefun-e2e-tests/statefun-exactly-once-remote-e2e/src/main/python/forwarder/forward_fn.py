@@ -27,39 +27,7 @@ import uuid
 
 functions = StatefulFunctions()
 
-
-@functions.bind(
-    typename="org.apache.flink.statefun.e2e.remote/counter",
-    persisted_values=[ PersistedValue("invoke_count") ])
-def counter(context, invoke: Invoke):
-    """
-    Keeps count of the number of invocations, and forwards that count
-    to be sent to the Kafka egress. We do the extra forwarding instead
-    of directly sending to Kafka, so that we cover inter-function
-    messaging in our E2E test.
-    """
-    invoke_count = context.state('invoke_count').unpack(InvokeCount)
-    if not invoke_count:
-        invoke_count = InvokeCount()
-        invoke_count.count = 1
-    else:
-        invoke_count.count += 1
-    context.state('invoke_count').pack(invoke_count)
-
-    response = InvokeResult()
-    response.id = context.address.identity
-    response.invoke_count = invoke_count.count
-
-    context.pack_and_send(
-        "org.apache.flink.statefun.e2e.remote/forward-function",
-        # use random keys to simulate both local handovers and
-        # cross-partition messaging via the feedback loop
-        uuid.uuid4().hex,
-        response
-    )
-
-
-@functions.bind("org.apache.flink.statefun.e2e.remote/forward-function")
+@functions.bind("org.apache.flink.statefun.e2e.remote/forwarder")
 def forward_to_egress(context, invoke_result: InvokeResult):
     """
     Simply forwards the results to the Kafka egress.
