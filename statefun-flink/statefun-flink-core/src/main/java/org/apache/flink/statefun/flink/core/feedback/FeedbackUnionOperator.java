@@ -27,6 +27,7 @@ import org.apache.flink.runtime.state.StateInitializationContext;
 import org.apache.flink.runtime.state.StateSnapshotContext;
 import org.apache.flink.statefun.flink.core.common.MailboxExecutorFacade;
 import org.apache.flink.statefun.flink.core.common.SerializableFunction;
+import org.apache.flink.statefun.flink.core.logger.FlinkRawKeyedStateCheckpointStreams;
 import org.apache.flink.statefun.flink.core.logger.Loggers;
 import org.apache.flink.statefun.flink.core.logger.UnboundedFeedbackLogger;
 import org.apache.flink.statefun.flink.core.logger.UnboundedFeedbackLoggerFactory;
@@ -142,7 +143,9 @@ public final class FeedbackUnionOperator<T> extends AbstractStreamOperator<T>
   @Override
   public void snapshotState(StateSnapshotContext context) throws Exception {
     super.snapshotState(context);
-    checkpoints.startLogging(context.getCheckpointId(), context.getRawKeyedOperatorStateOutput());
+    checkpoints.startLogging(
+        context.getCheckpointId(),
+        new FlinkRawKeyedStateCheckpointStreams(context.getRawKeyedOperatorStateOutput()));
   }
 
   @Override

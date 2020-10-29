@@ -22,7 +22,9 @@ import static org.junit.Assert.assertThat;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.apache.flink.api.common.typeutils.base.IntSerializer;
 import org.apache.flink.core.memory.DataInputViewStreamWrapper;
@@ -30,7 +32,7 @@ import org.apache.flink.core.memory.DataOutputSerializer;
 import org.apache.flink.runtime.io.disk.iomanager.IOManagerAsync;
 import org.apache.flink.statefun.flink.core.di.ObjectContainer;
 import org.apache.flink.statefun.flink.core.logger.UnboundedFeedbackLogger.Header;
-import org.hamcrest.Matchers;
+import org.apache.flink.statefun.flink.core.utils.ByteArrayKeyGroupCheckpointStreams;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -57,11 +59,11 @@ public class UnboundedFeedbackLoggerTest {
   public void sanity() {
     UnboundedFeedbackLogger<Integer> logger = instanceUnderTest(128, 1);
 
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    ByteArrayKeyGroupCheckpointStreams output = new ByteArrayKeyGroupCheckpointStreams(0, 128);
     logger.startLogging(output);
     logger.commit();
 
-    assertThat(output.size(), Matchers.greaterThan(0));
+    assertThat(output.getOutputStreams().size(), is(128));
   }
 
   @Test(expected = IllegalStateException.class)
@@ -133,12 +135,14 @@ public class UnboundedFeedbackLoggerTest {
   }
 
   private void roundTrip(int numElements, int maxMemoryInBytes) throws Exception {
-    InputStream input = serializeKeyGroup(1, maxMemoryInBytes, numElements);
+    List<InputStream> inputs = serializeKeyGroup(1, maxMemoryInBytes, numElements);
 
     ArrayList<Integer> messages = new ArrayList<>();
 
     UnboundedFeedbackLogger<Integer> loggerUnderTest = instanceUnderTest(1, 0);
-    loggerUnderTest.replyLoggedEnvelops(input, messages::add);
+    for (InputStream input : inputs) {
+      loggerUnderTest.replyLoggedEnvelops(input, messages::add);
+    }
 
     for (int i = 0; i < numElements; i++) {
       Integer message = messages.get(i);
@@ -146,12 +150,13 @@ public class UnboundedFeedbackLoggerTest {
     }
   }
 
-  private ByteArrayInputStream serializeKeyGroup(int maxParallelism, long maxMemory, int numItems) {
-    ByteArrayOutputStream output = new ByteArrayOutputStream();
+  private List<InputStream> serializeKeyGroup(int maxParallelism, long maxMemory, int numItems) {
+    ByteArrayKeyGroupCheckpointStreams outputs =
+        new ByteArrayKeyGroupCheckpointStreams(0, maxParallelism);
 
     UnboundedFeedbackLogger<Integer> loggerUnderTest = instanceUnderTest(maxParallelism, maxMemory);
 
-    loggerUnderTest.startLogging(output);
+    loggerUnderTest.startLogging(outputs);
 
     for (int i = 0; i < numItems; i++) {
       loggerUnderTest.append(i);
@@ -159,7 +164,10 @@ public class UnboundedFeedbackLoggerTest {
 
     loggerUnderTest.commit();
 
-    return new ByteArrayInputStream(output.toByteArray());
+    List<ByteArrayOutputStream> outputStreams = outputs.getOutputStreams();
+    return outputStreams.stream()
+        .map(stream -> new ByteArrayInputStream(stream.toByteArray()))
+        .collect(Collectors.toList());
   }
 
   @SuppressWarnings("unchecked")

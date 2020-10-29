@@ -21,12 +21,12 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import org.apache.flink.statefun.flink.core.logger.FeedbackLogger;
+import org.apache.flink.statefun.flink.core.logger.KeyGroupCheckpointStreams;
+import org.apache.flink.statefun.flink.core.utils.ByteArrayKeyGroupCheckpointStreams;
 import org.apache.flink.util.Preconditions;
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ public class CheckpointsTest {
     Loggers loggers = new Loggers();
 
     Checkpoints<String> checkpoints = new Checkpoints<>(loggers);
-    checkpoints.startLogging(1, new ByteArrayOutputStream());
+    checkpoints.startLogging(1, new ByteArrayKeyGroupCheckpointStreams(0, 1));
     checkpoints.append("hello");
     checkpoints.append("world");
     checkpoints.commitCheckpointsUntil(1);
@@ -52,10 +52,10 @@ public class CheckpointsTest {
 
     Checkpoints<String> checkpoints = new Checkpoints<>(loggers);
 
-    checkpoints.startLogging(1, new ByteArrayOutputStream());
+    checkpoints.startLogging(1, new ByteArrayKeyGroupCheckpointStreams(0, 1));
     checkpoints.append("a");
 
-    checkpoints.startLogging(2, new ByteArrayOutputStream());
+    checkpoints.startLogging(2, new ByteArrayKeyGroupCheckpointStreams(0, 1));
     checkpoints.append("b");
 
     checkpoints.commitCheckpointsUntil(1);
@@ -73,8 +73,8 @@ public class CheckpointsTest {
 
     Checkpoints<String> checkpoints = new Checkpoints<>(loggers);
 
-    checkpoints.startLogging(1, new ByteArrayOutputStream());
-    checkpoints.startLogging(2, new ByteArrayOutputStream());
+    checkpoints.startLogging(1, new ByteArrayKeyGroupCheckpointStreams(0, 1));
+    checkpoints.startLogging(2, new ByteArrayKeyGroupCheckpointStreams(0, 1));
     checkpoints.commitCheckpointsUntil(2);
 
     assertThat(loggers.state(0), is(LoggerState.COMMITTED));
@@ -117,7 +117,7 @@ public class CheckpointsTest {
     LoggerState state = LoggerState.IDLE;
 
     @Override
-    public void startLogging(OutputStream keyedStateCheckpointOutputStream) {
+    public void startLogging(KeyGroupCheckpointStreams keyedStateCheckpointOutputStream) {
       Preconditions.checkState(state == LoggerState.IDLE);
       state = LoggerState.LOGGING;
     }

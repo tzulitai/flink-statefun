@@ -23,7 +23,6 @@ import java.io.BufferedInputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PushbackInputStream;
 import java.util.Arrays;
 import java.util.Map;
@@ -49,7 +48,7 @@ public final class UnboundedFeedbackLogger<T> implements FeedbackLogger<T> {
   private final Map<Integer, KeyGroupStream<T>> keyGroupStreams;
   private final CheckpointedStreamOperations checkpointedStreamOperations;
 
-  @Nullable private OutputStream keyedStateOutputStream;
+  @Nullable private KeyGroupCheckpointStreams keyGroupCheckpointStreams;
   private TypeSerializer<T> serializer;
   private Closeable snapshotLease;
 
@@ -66,17 +65,14 @@ public final class UnboundedFeedbackLogger<T> implements FeedbackLogger<T> {
   }
 
   @Override
-  public void startLogging(OutputStream keyedStateCheckpointOutputStream) {
-    this.checkpointedStreamOperations.requireKeyedStateCheckpointed(
-        keyedStateCheckpointOutputStream);
-    this.keyedStateOutputStream = Objects.requireNonNull(keyedStateCheckpointOutputStream);
-    this.snapshotLease =
-        checkpointedStreamOperations.acquireLease(keyedStateCheckpointOutputStream);
+  public void startLogging(KeyGroupCheckpointStreams keyGroupCheckpointStreams) {
+    this.keyGroupCheckpointStreams = Objects.requireNonNull(keyGroupCheckpointStreams);
+    this.snapshotLease = keyGroupCheckpointStreams.acquireLease();
   }
 
   @Override
   public void append(T message) {
-    if (keyedStateOutputStream == null) {
+    if (keyGroupCheckpointStreams == null) {
       //
       // we are not currently logging.
       //
@@ -96,27 +92,27 @@ public final class UnboundedFeedbackLogger<T> implements FeedbackLogger<T> {
       keyGroupStreams.clear();
       IOUtils.closeQuietly(snapshotLease);
       snapshotLease = null;
-      keyedStateOutputStream = null;
+      keyGroupCheckpointStreams = null;
     }
   }
 
   private void flushToKeyedStateOutputStream() throws IOException {
-    checkState(keyedStateOutputStream != null, "Trying to flush envelopes not in a logging state");
+    checkState(
+        keyGroupCheckpointStreams != null, "Trying to flush envelopes not in a logging state");
 
-    final DataOutputView target = new DataOutputViewStreamWrapper(keyedStateOutputStream);
-    final Iterable<Integer> assignedKeyGroupIds =
-        checkpointedStreamOperations.keyGroupList(keyedStateOutputStream);
-    // the underlying checkpointed raw stream, requires that all key groups assigned
-    // to this operator must be written to the underlying stream.
-    for (Integer keyGroupId : assignedKeyGroupIds) {
-      checkpointedStreamOperations.startNewKeyGroup(keyedStateOutputStream, keyGroupId);
-      Header.writeHeader(target);
+    while (keyGroupCheckpointStreams.hasNext()) {
+      final KeyGroupCheckpointStreams.KeyGroupCheckpointStream keyGroupStream =
+          keyGroupCheckpointStreams.next();
+      final int keyGroupId = keyGroupStream.keyGroupId();
+      final DataOutputView outputView = new DataOutputViewStreamWrapper(keyGroupStream.get());
+
+      Header.writeHeader(outputView);
 
       @Nullable KeyGroupStream<T> stream = keyGroupStreams.get(keyGroupId);
       if (stream == null) {
-        KeyGroupStream.writeEmptyTo(target);
+        KeyGroupStream.writeEmptyTo(outputView);
       } else {
-        stream.writeTo(target);
+        stream.writeTo(outputView);
       }
     }
   }
@@ -142,7 +138,7 @@ public final class UnboundedFeedbackLogger<T> implements FeedbackLogger<T> {
   public void close() {
     IOUtils.closeQuietly(snapshotLease);
     snapshotLease = null;
-    keyedStateOutputStream = null;
+    keyGroupCheckpointStreams = null;
     keyGroupStreams.clear();
   }
 

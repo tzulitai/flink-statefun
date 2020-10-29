@@ -18,12 +18,12 @@
 
 package org.apache.flink.statefun.flink.core.feedback;
 
-import java.io.OutputStream;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 import org.apache.flink.statefun.flink.core.logger.FeedbackLogger;
+import org.apache.flink.statefun.flink.core.logger.KeyGroupCheckpointStreams;
 import org.apache.flink.util.IOUtils;
 
 final class Checkpoints<T> implements AutoCloseable {
@@ -34,7 +34,7 @@ final class Checkpoints<T> implements AutoCloseable {
     this.feedbackLoggerFactory = Objects.requireNonNull(feedbackLoggerFactory);
   }
 
-  public void startLogging(long checkpointId, OutputStream outputStream) {
+  public void startLogging(long checkpointId, KeyGroupCheckpointStreams outputStream) {
     FeedbackLogger<T> logger = feedbackLoggerFactory.get();
     logger.startLogging(outputStream);
     uncompletedCheckpoints.put(checkpointId, logger);
