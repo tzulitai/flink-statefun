@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.apache.flink.api.common.typeutils.base.IntSerializer;
 import org.apache.flink.core.memory.DataInputViewStreamWrapper;
 import org.apache.flink.core.memory.DataOutputSerializer;
@@ -178,37 +177,6 @@ public class UnboundedFeedbackLoggerTest {
         Loggers.unboundedSpillableLoggerContainer(
             IO_MANAGER, maxParallelism, totalMemory, IntSerializer.INSTANCE, Function.identity());
 
-    container.add(
-        "checkpoint-stream-ops",
-        CheckpointedStreamOperations.class,
-        new NoopStreamOps(maxParallelism));
     return container.get(UnboundedFeedbackLoggerFactory.class).create();
-  }
-
-  static final class NoopStreamOps implements CheckpointedStreamOperations {
-    private final int maxParallelism;
-
-    NoopStreamOps(int maxParallelism) {
-      this.maxParallelism = maxParallelism;
-    }
-
-    @Override
-    public void requireKeyedStateCheckpointed(OutputStream keyedStateCheckpointOutputStream) {
-      // noop
-    }
-
-    @Override
-    public Iterable<Integer> keyGroupList(OutputStream stream) {
-      IntStream range = IntStream.range(0, maxParallelism);
-      return range::iterator;
-    }
-
-    @Override
-    public void startNewKeyGroup(OutputStream stream, int keyGroup) {}
-
-    @Override
-    public Closeable acquireLease(OutputStream keyedStateCheckpointOutputStream) {
-      return () -> {}; // NOOP
-    }
   }
 }

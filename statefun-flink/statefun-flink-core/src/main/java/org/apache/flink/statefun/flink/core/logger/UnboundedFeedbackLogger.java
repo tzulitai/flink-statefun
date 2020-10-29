@@ -46,7 +46,6 @@ public final class UnboundedFeedbackLogger<T> implements FeedbackLogger<T> {
   private final Supplier<KeyGroupStream<T>> supplier;
   private final ToIntFunction<T> keyGroupAssigner;
   private final Map<Integer, KeyGroupStream<T>> keyGroupStreams;
-  private final CheckpointedStreamOperations checkpointedStreamOperations;
 
   @Nullable private KeyGroupCheckpointStreams keyGroupCheckpointStreams;
   private TypeSerializer<T> serializer;
@@ -55,13 +54,11 @@ public final class UnboundedFeedbackLogger<T> implements FeedbackLogger<T> {
   public UnboundedFeedbackLogger(
       Supplier<KeyGroupStream<T>> supplier,
       ToIntFunction<T> keyGroupAssigner,
-      CheckpointedStreamOperations ops,
       TypeSerializer<T> serializer) {
     this.supplier = Objects.requireNonNull(supplier);
     this.keyGroupAssigner = Objects.requireNonNull(keyGroupAssigner);
     this.serializer = Objects.requireNonNull(serializer);
     this.keyGroupStreams = new TreeMap<>();
-    this.checkpointedStreamOperations = Objects.requireNonNull(ops);
   }
 
   @Override
