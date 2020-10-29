@@ -17,6 +17,7 @@
  */
 package org.apache.flink.statefun.flink.core.logger;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -135,19 +136,19 @@ public class UnboundedFeedbackLoggerTest {
   }
 
   private void roundTrip(int numElements, int maxMemoryInBytes) throws Exception {
-    List<InputStream> inputs = serializeKeyGroup(1, maxMemoryInBytes, numElements);
+    List<InputStream> inputs = serializeKeyGroup(128, maxMemoryInBytes, numElements);
 
     ArrayList<Integer> messages = new ArrayList<>();
 
-    UnboundedFeedbackLogger<Integer> loggerUnderTest = instanceUnderTest(1, 0);
+    UnboundedFeedbackLogger<Integer> loggerUnderTest = instanceUnderTest(128, 0);
     for (InputStream input : inputs) {
       loggerUnderTest.replyLoggedEnvelops(input, messages::add);
     }
 
     for (int i = 0; i < numElements; i++) {
-      Integer message = messages.get(i);
-      assertThat(message, is(i));
+      assertThat(messages, hasItem(i));
     }
+    assertThat(messages.size(), is(numElements));
   }
 
   private List<InputStream> serializeKeyGroup(int maxParallelism, long maxMemory, int numItems) {
