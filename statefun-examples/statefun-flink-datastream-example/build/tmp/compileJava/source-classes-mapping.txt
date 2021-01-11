@@ -1,0 +1,5 @@
+org/apache/flink/statefun/examples/datastream/Example.java
+ org.apache.flink.statefun.examples.datastream.Example
+ org.apache.flink.statefun.examples.datastream.Example$1
+ org.apache.flink.statefun.examples.datastream.Example$MyFunction
+ org.apache.flink.statefun.examples.datastream.Example$NameSource

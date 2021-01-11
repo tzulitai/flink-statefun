@@ -1,0 +1,10 @@
+org/apache/flink/statefun/flink/datastream/SerializableStatefulFunctionProvider.java
+ org.apache.flink.statefun.flink.datastream.SerializableStatefulFunctionProvider
+org/apache/flink/statefun/flink/datastream/SerializableHttpFunctionProvider.java
+ org.apache.flink.statefun.flink.datastream.SerializableHttpFunctionProvider
+org/apache/flink/statefun/flink/datastream/StatefulFunctionEgressStreams.java
+ org.apache.flink.statefun.flink.datastream.StatefulFunctionEgressStreams
+org/apache/flink/statefun/flink/datastream/StatefulFunctionDataStreamBuilder.java
+ org.apache.flink.statefun.flink.datastream.StatefulFunctionDataStreamBuilder
+org/apache/flink/statefun/flink/datastream/RequestReplyFunctionBuilder.java
+ org.apache.flink.statefun.flink.datastream.RequestReplyFunctionBuilder

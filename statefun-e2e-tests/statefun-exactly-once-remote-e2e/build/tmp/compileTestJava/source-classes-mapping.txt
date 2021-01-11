@@ -1,0 +1,2 @@
+org/apache/flink/statefun/e2e/remote/ExactlyOnceWithRemoteFnE2E.java
+ org.apache.flink.statefun.e2e.remote.ExactlyOnceWithRemoteFnE2E

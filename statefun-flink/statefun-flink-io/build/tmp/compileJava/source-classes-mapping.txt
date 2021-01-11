@@ -1,0 +1,64 @@
+org/apache/flink/statefun/flink/io/spi/FlinkIoModule.java
+ org.apache.flink.statefun.flink.io.spi.FlinkIoModule
+ org.apache.flink.statefun.flink.io.spi.FlinkIoModule$Binder
+org/apache/flink/statefun/flink/io/generated/KinesisEgress.java
+ org.apache.flink.statefun.flink.io.generated.KinesisEgress
+ org.apache.flink.statefun.flink.io.generated.KinesisEgress$1
+org/apache/flink/statefun/flink/io/generated/TargetFunctionType.java
+ org.apache.flink.statefun.flink.io.generated.TargetFunctionType
+ org.apache.flink.statefun.flink.io.generated.TargetFunctionType$1
+ org.apache.flink.statefun.flink.io.generated.TargetFunctionType$Builder
+org/apache/flink/statefun/flink/io/datastream/SourceSinkModule.java
+ org.apache.flink.statefun.flink.io.datastream.SourceSinkModule
+ org.apache.flink.statefun.flink.io.datastream.SourceSinkModule$1
+ org.apache.flink.statefun.flink.io.datastream.SourceSinkModule$SinkSourceProvider
+org/apache/flink/statefun/flink/io/generated/Routable.java
+ org.apache.flink.statefun.flink.io.generated.Routable
+ org.apache.flink.statefun.flink.io.generated.Routable$1
+org/apache/flink/statefun/flink/io/datastream/SourceFunctionSpec.java
+ org.apache.flink.statefun.flink.io.datastream.SourceFunctionSpec
+org/apache/flink/statefun/flink/io/spi/JsonEgressSpec.java
+ org.apache.flink.statefun.flink.io.spi.JsonEgressSpec
+org/apache/flink/statefun/flink/io/datastream/SinkFunctionSpec.java
+ org.apache.flink.statefun.flink.io.datastream.SinkFunctionSpec
+org/apache/flink/statefun/flink/io/generated/AutoRoutableOrBuilder.java
+ org.apache.flink.statefun.flink.io.generated.AutoRoutableOrBuilder
+org/apache/flink/statefun/flink/io/kinesis/PolyglotKinesisIOTypes.java
+ org.apache.flink.statefun.flink.io.kinesis.PolyglotKinesisIOTypes
+org/apache/flink/statefun/flink/io/kafka/KafkaEgressTypes.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaEgressTypes
+org/apache/flink/statefun/flink/io/generated/RoutingConfig.java
+ org.apache.flink.statefun.flink.io.generated.RoutingConfig
+ org.apache.flink.statefun.flink.io.generated.RoutingConfig$1
+ org.apache.flink.statefun.flink.io.generated.RoutingConfig$Builder
+org/apache/flink/statefun/flink/io/generated/RoutingConfigOrBuilder.java
+ org.apache.flink.statefun.flink.io.generated.RoutingConfigOrBuilder
+org/apache/flink/statefun/flink/io/generated/KafkaProducerRecordOrBuilder.java
+ org.apache.flink.statefun.flink.io.generated.KafkaProducerRecordOrBuilder
+org/apache/flink/statefun/flink/io/generated/KafkaEgress.java
+ org.apache.flink.statefun.flink.io.generated.KafkaEgress
+ org.apache.flink.statefun.flink.io.generated.KafkaEgress$1
+org/apache/flink/statefun/flink/io/generated/KinesisEgressRecord.java
+ org.apache.flink.statefun.flink.io.generated.KinesisEgressRecord
+ org.apache.flink.statefun.flink.io.generated.KinesisEgressRecord$1
+ org.apache.flink.statefun.flink.io.generated.KinesisEgressRecord$Builder
+org/apache/flink/statefun/flink/io/spi/SourceProvider.java
+ org.apache.flink.statefun.flink.io.spi.SourceProvider
+org/apache/flink/statefun/flink/io/generated/AutoRoutable.java
+ org.apache.flink.statefun.flink.io.generated.AutoRoutable
+ org.apache.flink.statefun.flink.io.generated.AutoRoutable$1
+ org.apache.flink.statefun.flink.io.generated.AutoRoutable$Builder
+org/apache/flink/statefun/flink/io/spi/JsonIngressSpec.java
+ org.apache.flink.statefun.flink.io.spi.JsonIngressSpec
+org/apache/flink/statefun/flink/io/generated/KinesisEgressRecordOrBuilder.java
+ org.apache.flink.statefun.flink.io.generated.KinesisEgressRecordOrBuilder
+org/apache/flink/statefun/flink/io/spi/SinkProvider.java
+ org.apache.flink.statefun.flink.io.spi.SinkProvider
+org/apache/flink/statefun/flink/io/kafka/ProtobufKafkaIngressTypes.java
+ org.apache.flink.statefun.flink.io.kafka.ProtobufKafkaIngressTypes
+org/apache/flink/statefun/flink/io/generated/TargetFunctionTypeOrBuilder.java
+ org.apache.flink.statefun.flink.io.generated.TargetFunctionTypeOrBuilder
+org/apache/flink/statefun/flink/io/generated/KafkaProducerRecord.java
+ org.apache.flink.statefun.flink.io.generated.KafkaProducerRecord
+ org.apache.flink.statefun.flink.io.generated.KafkaProducerRecord$1
+ org.apache.flink.statefun.flink.io.generated.KafkaProducerRecord$Builder

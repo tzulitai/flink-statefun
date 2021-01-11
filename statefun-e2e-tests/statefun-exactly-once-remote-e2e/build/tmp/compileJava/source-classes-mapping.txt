@@ -1,0 +1,15 @@
+org/apache/flink/statefun/e2e/remote/generated/RemoteModuleVerification.java
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$1
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$Invoke
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$Invoke$1
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$Invoke$Builder
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeCount
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeCount$1
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeCount$Builder
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeCountOrBuilder
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeOrBuilder
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeResult
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeResult$1
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeResult$Builder
+ org.apache.flink.statefun.e2e.remote.generated.RemoteModuleVerification$InvokeResultOrBuilder

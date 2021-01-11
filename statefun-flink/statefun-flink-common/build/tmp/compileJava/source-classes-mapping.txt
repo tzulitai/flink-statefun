@@ -1,0 +1,58 @@
+org/apache/flink/statefun/flink/common/protopath/ProtobufPathParser.java
+ org.apache.flink.statefun.flink.common.protopath.ProtobufPathParser
+org/apache/flink/statefun/flink/common/protobuf/ProtobufTypeSerializerSnapshot.java
+ org.apache.flink.statefun.flink.common.protobuf.ProtobufTypeSerializerSnapshot
+org/apache/flink/statefun/flink/common/protobuf/ProtobufSerializer.java
+ org.apache.flink.statefun.flink.common.protobuf.ProtobufSerializer
+org/apache/flink/statefun/flink/common/protopath/ProtobufPath.java
+ org.apache.flink.statefun.flink.common.protopath.ProtobufPath
+org/apache/flink/statefun/flink/common/generated/ProtobufSerializerSnapshot.java
+ org.apache.flink.statefun.flink.common.generated.ProtobufSerializerSnapshot
+ org.apache.flink.statefun.flink.common.generated.ProtobufSerializerSnapshot$1
+ org.apache.flink.statefun.flink.common.generated.ProtobufSerializerSnapshot$Builder
+org/apache/flink/statefun/flink/common/ResourceLocator.java
+ org.apache.flink.statefun.flink.common.ResourceLocator
+ org.apache.flink.statefun.flink.common.ResourceLocator$1
+org/apache/flink/statefun/flink/common/protobuf/ProtobufReflectionUtil.java
+ org.apache.flink.statefun.flink.common.protobuf.ProtobufReflectionUtil
+org/apache/flink/statefun/flink/common/protobuf/ProtobufTypeInformation.java
+ org.apache.flink.statefun.flink.common.protobuf.ProtobufTypeInformation
+org/apache/flink/statefun/flink/common/UnimplementedTypeInfo.java
+ org.apache.flink.statefun.flink.common.UnimplementedTypeInfo
+org/apache/flink/statefun/flink/common/json/MissingKeyException.java
+ org.apache.flink.statefun.flink.common.json.MissingKeyException
+org/apache/flink/statefun/flink/common/protobuf/ProtobufTypeSerializer.java
+ org.apache.flink.statefun.flink.common.protobuf.ProtobufTypeSerializer
+org/apache/flink/statefun/flink/common/protopath/PathFragmentDescriptor.java
+ org.apache.flink.statefun.flink.common.protopath.PathFragmentDescriptor
+org/apache/flink/statefun/flink/common/protobuf/OutputStreamView.java
+ org.apache.flink.statefun.flink.common.protobuf.OutputStreamView
+org/apache/flink/statefun/flink/common/generated/Serializer.java
+ org.apache.flink.statefun.flink.common.generated.Serializer
+ org.apache.flink.statefun.flink.common.generated.Serializer$1
+org/apache/flink/statefun/flink/common/SetContextClassLoader.java
+ org.apache.flink.statefun.flink.common.SetContextClassLoader
+org/apache/flink/statefun/flink/common/json/NamespaceNamePair.java
+ org.apache.flink.statefun.flink.common.json.NamespaceNamePair
+org/apache/flink/statefun/flink/common/UnimplementedTypeSerializer.java
+ org.apache.flink.statefun.flink.common.UnimplementedTypeSerializer
+org/apache/flink/statefun/flink/common/json/Selectors.java
+ org.apache.flink.statefun.flink.common.json.Selectors
+org/apache/flink/statefun/flink/common/protopath/ProtobufDynamicMessageLens.java
+ org.apache.flink.statefun.flink.common.protopath.ProtobufDynamicMessageLens
+org/apache/flink/statefun/flink/common/protopath/ProtobufPathCompiler.java
+ org.apache.flink.statefun.flink.common.protopath.ProtobufPathCompiler
+org/apache/flink/statefun/flink/common/protobuf/ProtobufDescriptorMap.java
+ org.apache.flink.statefun.flink.common.protobuf.ProtobufDescriptorMap
+org/apache/flink/statefun/flink/common/generated/ProtobufSerializerSnapshotOrBuilder.java
+ org.apache.flink.statefun.flink.common.generated.ProtobufSerializerSnapshotOrBuilder
+org/apache/flink/statefun/flink/common/protobuf/FileDescriptorResolver.java
+ org.apache.flink.statefun.flink.common.protobuf.FileDescriptorResolver
+ org.apache.flink.statefun.flink.common.protobuf.FileDescriptorResolver$1
+ org.apache.flink.statefun.flink.common.protobuf.FileDescriptorResolver$FileDescriptorProtoWrapper
+org/apache/flink/statefun/flink/common/protopath/PathFragment.java
+ org.apache.flink.statefun.flink.common.protopath.PathFragment
+org/apache/flink/statefun/flink/common/protobuf/InputStreamView.java
+ org.apache.flink.statefun.flink.common.protobuf.InputStreamView
+org/apache/flink/statefun/flink/common/json/WrongTypeException.java
+ org.apache.flink.statefun.flink.common.json.WrongTypeException

@@ -1,0 +1,64 @@
+org/apache/flink/statefun/flink/io/kafka/ProtobufKafkaSourceProvider.java
+ org.apache.flink.statefun.flink.io.kafka.ProtobufKafkaSourceProvider
+org/apache/flink/statefun/flink/io/kinesis/polyglot/GenericKinesisEgressSerializer.java
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.GenericKinesisEgressSerializer
+org/apache/flink/statefun/flink/io/kinesis/polyglot/GenericKinesisSinkProvider.java
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.GenericKinesisSinkProvider
+org/apache/flink/statefun/flink/io/kafka/GenericKafkaSinkProvider.java
+ org.apache.flink.statefun.flink.io.kafka.GenericKafkaSinkProvider
+ org.apache.flink.statefun.flink.io.kafka.GenericKafkaSinkProvider$1
+org/apache/flink/statefun/flink/io/kinesis/polyglot/RoutableProtobufKinesisSourceProvider.java
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.RoutableProtobufKinesisSourceProvider
+org/apache/flink/statefun/flink/io/kinesis/KinesisFlinkIOModule.java
+ org.apache.flink.statefun.flink.io.kinesis.KinesisFlinkIOModule
+org/apache/flink/statefun/flink/io/kafka/KafkaSinkProvider.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaSinkProvider
+ org.apache.flink.statefun.flink.io.kafka.KafkaSinkProvider$1
+org/apache/flink/statefun/flink/io/kinesis/polyglot/KinesisEgressSpecJsonParser.java
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.KinesisEgressSpecJsonParser
+org/apache/flink/statefun/flink/io/kafka/KafkaDeserializationSchemaDelegate.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaDeserializationSchemaDelegate
+org/apache/flink/statefun/flink/io/kinesis/polyglot/AwsAuthSpecJsonParser.java
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.AwsAuthSpecJsonParser
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.AwsAuthSpecJsonParser$Credentials
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.AwsAuthSpecJsonParser$Region
+org/apache/flink/statefun/flink/io/kinesis/CachingPartitionerSerializerDelegate.java
+ org.apache.flink.statefun.flink.io.kinesis.CachingPartitionerSerializerDelegate
+org/apache/flink/statefun/flink/io/kafka/KafkaIngressSpecJsonParser.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaIngressSpecJsonParser
+org/apache/flink/statefun/flink/io/kinesis/KinesisSourceProvider.java
+ org.apache.flink.statefun.flink.io.kinesis.KinesisSourceProvider
+org/apache/flink/statefun/flink/io/kinesis/AwsAuthConfigProperties.java
+ org.apache.flink.statefun.flink.io.kinesis.AwsAuthConfigProperties
+org/apache/flink/statefun/flink/io/kafka/KafkaSourceProvider.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaSourceProvider
+org/apache/flink/statefun/flink/io/kafka/KafkaSerializationSchemaDelegate.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaSerializationSchemaDelegate
+org/apache/flink/statefun/flink/io/common/ReflectionUtil.java
+ org.apache.flink.statefun.flink.io.common.ReflectionUtil
+org/apache/flink/statefun/flink/io/kinesis/polyglot/KinesisIngressSpecJsonParser.java
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.KinesisIngressSpecJsonParser
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.KinesisIngressSpecJsonParser$StartupPosition
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.KinesisIngressSpecJsonParser$Streams
+org/apache/flink/statefun/flink/io/kafka/ProtobufKafkaIngressDeserializer.java
+ org.apache.flink.statefun.flink.io.kafka.ProtobufKafkaIngressDeserializer
+org/apache/flink/statefun/flink/io/kafka/GenericKafkaEgressSerializer.java
+ org.apache.flink.statefun.flink.io.kafka.GenericKafkaEgressSerializer
+org/apache/flink/statefun/sdk/kinesis/ingress/KinesisIngressBuilderApiExtension.java
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressBuilderApiExtension
+org/apache/flink/statefun/flink/io/kafka/RoutableProtobufKafkaIngressDeserializer.java
+ org.apache.flink.statefun.flink.io.kafka.RoutableProtobufKafkaIngressDeserializer
+org/apache/flink/statefun/sdk/kafka/KafkaIngressBuilderApiExtension.java
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressBuilderApiExtension
+org/apache/flink/statefun/flink/io/kinesis/KinesisDeserializationSchemaDelegate.java
+ org.apache.flink.statefun.flink.io.kinesis.KinesisDeserializationSchemaDelegate
+org/apache/flink/statefun/flink/io/kafka/RoutableProtobufKafkaSourceProvider.java
+ org.apache.flink.statefun.flink.io.kafka.RoutableProtobufKafkaSourceProvider
+org/apache/flink/statefun/flink/io/kafka/KafkaFlinkIoModule.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaFlinkIoModule
+org/apache/flink/statefun/flink/io/kinesis/KinesisSinkProvider.java
+ org.apache.flink.statefun.flink.io.kinesis.KinesisSinkProvider
+org/apache/flink/statefun/flink/io/kafka/KafkaEgressSpecJsonParser.java
+ org.apache.flink.statefun.flink.io.kafka.KafkaEgressSpecJsonParser
+org/apache/flink/statefun/flink/io/kinesis/polyglot/RoutableProtobufKinesisIngressDeserializer.java
+ org.apache.flink.statefun.flink.io.kinesis.polyglot.RoutableProtobufKinesisIngressDeserializer

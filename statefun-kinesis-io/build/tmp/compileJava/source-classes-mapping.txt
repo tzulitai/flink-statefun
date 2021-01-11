@@ -1,0 +1,40 @@
+org/apache/flink/statefun/sdk/kinesis/ingress/KinesisIngressDeserializer.java
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressDeserializer
+org/apache/flink/statefun/sdk/kinesis/egress/KinesisEgressSerializer.java
+ org.apache.flink.statefun.sdk.kinesis.egress.KinesisEgressSerializer
+org/apache/flink/statefun/sdk/kinesis/auth/AwsRegion.java
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsRegion
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsRegion$1
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsRegion$CustomEndpointAwsRegion
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsRegion$DefaultAwsRegion
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsRegion$SpecificIdAwsRegion
+org/apache/flink/statefun/sdk/kinesis/ingress/IngressRecord.java
+ org.apache.flink.statefun.sdk.kinesis.ingress.IngressRecord
+ org.apache.flink.statefun.sdk.kinesis.ingress.IngressRecord$1
+ org.apache.flink.statefun.sdk.kinesis.ingress.IngressRecord$Builder
+org/apache/flink/statefun/sdk/kinesis/KinesisIOTypes.java
+ org.apache.flink.statefun.sdk.kinesis.KinesisIOTypes
+org/apache/flink/statefun/sdk/kinesis/egress/KinesisEgressSpec.java
+ org.apache.flink.statefun.sdk.kinesis.egress.KinesisEgressSpec
+org/apache/flink/statefun/sdk/kinesis/egress/KinesisEgressBuilder.java
+ org.apache.flink.statefun.sdk.kinesis.egress.KinesisEgressBuilder
+org/apache/flink/statefun/sdk/kinesis/ingress/KinesisIngressStartupPosition.java
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressStartupPosition
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressStartupPosition$1
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressStartupPosition$DatePosition
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressStartupPosition$EarliestPosition
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressStartupPosition$LatestPosition
+org/apache/flink/statefun/sdk/kinesis/egress/EgressRecord.java
+ org.apache.flink.statefun.sdk.kinesis.egress.EgressRecord
+ org.apache.flink.statefun.sdk.kinesis.egress.EgressRecord$1
+ org.apache.flink.statefun.sdk.kinesis.egress.EgressRecord$Builder
+org/apache/flink/statefun/sdk/kinesis/auth/AwsCredentials.java
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsCredentials
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsCredentials$1
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsCredentials$BasicAwsCredentials
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsCredentials$DefaultAwsCredentials
+ org.apache.flink.statefun.sdk.kinesis.auth.AwsCredentials$ProfileAwsCredentials
+org/apache/flink/statefun/sdk/kinesis/ingress/KinesisIngressSpec.java
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressSpec
+org/apache/flink/statefun/sdk/kinesis/ingress/KinesisIngressBuilder.java
+ org.apache.flink.statefun.sdk.kinesis.ingress.KinesisIngressBuilder

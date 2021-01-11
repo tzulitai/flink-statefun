@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.protobuf:protobuf-java:3.7.1'
+}
+
+sourceSets {
+    main {
+        proto {
+            srcDir 'src/main/protobuf'
+        }
+    }
+    test {
+        proto {
+            srcDir 'src/test/protobuf'
+        }
+    }
+}
+
+protobuf {
+    protoc {
+        // The artifact spec for the Protobuf Compiler
+        artifact = 'com.google.protobuf:protoc:3.7.1'
+    }
+}

@@ -1,0 +1,30 @@
+org/apache/flink/statefun/sdk/kafka/KafkaEgressBuilder.java
+ org.apache.flink.statefun.sdk.kafka.KafkaEgressBuilder
+org/apache/flink/statefun/sdk/kafka/KafkaProducerSemantic.java
+ org.apache.flink.statefun.sdk.kafka.KafkaProducerSemantic
+org/apache/flink/statefun/sdk/kafka/KafkaTopicPartition.java
+ org.apache.flink.statefun.sdk.kafka.KafkaTopicPartition
+org/apache/flink/statefun/sdk/kafka/KafkaIngressAutoResetPosition.java
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressAutoResetPosition
+org/apache/flink/statefun/sdk/kafka/KafkaIngressSpec.java
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressSpec
+org/apache/flink/statefun/sdk/kafka/Constants.java
+ org.apache.flink.statefun.sdk.kafka.Constants
+org/apache/flink/statefun/sdk/kafka/OptionalConfig.java
+ org.apache.flink.statefun.sdk.kafka.OptionalConfig
+org/apache/flink/statefun/sdk/kafka/KafkaEgressSerializer.java
+ org.apache.flink.statefun.sdk.kafka.KafkaEgressSerializer
+org/apache/flink/statefun/sdk/kafka/KafkaIngressStartupPosition.java
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition$1
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition$DatePosition
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition$EarliestPosition
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition$GroupOffsetsPosition
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition$LatestPosition
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressStartupPosition$SpecificOffsetsPosition
+org/apache/flink/statefun/sdk/kafka/KafkaIngressDeserializer.java
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressDeserializer
+org/apache/flink/statefun/sdk/kafka/KafkaIngressBuilder.java
+ org.apache.flink.statefun.sdk.kafka.KafkaIngressBuilder
+org/apache/flink/statefun/sdk/kafka/KafkaEgressSpec.java
+ org.apache.flink.statefun.sdk.kafka.KafkaEgressSpec

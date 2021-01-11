@@ -1,0 +1,12 @@
+org/apache/flink/statefun/examples/harness/MyRouter.java
+ org.apache.flink.statefun.examples.harness.MyRouter
+org/apache/flink/statefun/examples/harness/MyFunction.java
+ org.apache.flink.statefun.examples.harness.MyFunction
+org/apache/flink/statefun/examples/harness/MyConstants.java
+ org.apache.flink.statefun.examples.harness.MyConstants
+org/apache/flink/statefun/examples/harness/MyModule.java
+ org.apache.flink.statefun.examples.harness.MyModule
+org/apache/flink/statefun/examples/harness/MyMessages.java
+ org.apache.flink.statefun.examples.harness.MyMessages
+ org.apache.flink.statefun.examples.harness.MyMessages$MyInputMessage
+ org.apache.flink.statefun.examples.harness.MyMessages$MyOutputMessage

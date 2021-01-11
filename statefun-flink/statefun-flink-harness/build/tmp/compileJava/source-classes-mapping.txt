@@ -1,0 +1,21 @@
+org/apache/flink/statefun/flink/harness/io/SupplyingSource.java
+ org.apache.flink.statefun.flink.harness.io.SupplyingSource
+org/apache/flink/statefun/flink/harness/io/SupplyingIngressSpec.java
+ org.apache.flink.statefun.flink.harness.io.SupplyingIngressSpec
+org/apache/flink/statefun/flink/harness/io/ConsumingEgressSpec.java
+ org.apache.flink.statefun.flink.harness.io.ConsumingEgressSpec
+org/apache/flink/statefun/flink/harness/io/HarnessIoModule.java
+ org.apache.flink.statefun.flink.harness.io.HarnessIoModule
+org/apache/flink/statefun/flink/harness/io/SerializableSupplier.java
+ org.apache.flink.statefun.flink.harness.io.SerializableSupplier
+org/apache/flink/statefun/flink/harness/Harness.java
+ org.apache.flink.statefun.flink.harness.Harness
+ org.apache.flink.statefun.flink.harness.Harness$1
+ org.apache.flink.statefun.flink.harness.Harness$HarnessProvider
+ org.apache.flink.statefun.flink.harness.Harness$PrintingConsumer
+org/apache/flink/statefun/flink/harness/io/ConsumingSink.java
+ org.apache.flink.statefun.flink.harness.io.ConsumingSink
+org/apache/flink/statefun/flink/harness/io/SerializableConsumer.java
+ org.apache.flink.statefun.flink.harness.io.SerializableConsumer
+org/apache/flink/statefun/flink/harness/io/HarnessConstants.java
+ org.apache.flink.statefun.flink.harness.io.HarnessConstants
