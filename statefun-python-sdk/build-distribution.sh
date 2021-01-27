@@ -23,6 +23,8 @@ SDK_PROTOS_DIR="${BASE_DIR}/../statefun-sdk-protos/src/main/protobuf"
 
 cd ${BASE_DIR}
 
+rm -fr dist
+
 # create a target/ directory like in MAVEN.
 # this directory will contain a temporary copy of the source and
 # addtional generated sources (for example sdk .proto files copied from else where)
