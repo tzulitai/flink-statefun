@@ -47,7 +47,7 @@ cd target/
 docker run -v "${BASE_DIR}/target:/app" \
 	--workdir /app \
 	-i  python:3.7-alpine \
-	apk add protoc && \
+	apk add --no-cache protoc && \
 	protoc *proto --python_out=statefun/ && \
 	python3 setup.py sdist bdist_wheel
 
