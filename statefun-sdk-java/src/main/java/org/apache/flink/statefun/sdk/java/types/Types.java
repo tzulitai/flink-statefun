@@ -1,6 +1,7 @@
 package org.apache.flink.statefun.sdk.java.types;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import org.apache.flink.statefun.sdk.java.TypeName;
@@ -26,6 +27,9 @@ public final class Types {
       TypeName.typeNameFromString("io.statefun.types/double");
   public static final TypeName STRING_TYPENAME =
       TypeName.typeNameFromString("io.statefun.types/string");
+
+  private static final Set<TypeCharacteristics> IMMUTABLE_TYPE_CHARS =
+      Collections.unmodifiableSet(EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES));
 
   public static Type<Long> longType() {
     return LongType.INSTANCE;
@@ -68,7 +72,7 @@ public final class Types {
     }
 
     public Set<TypeCharacteristics> typeCharacteristics() {
-      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+      return IMMUTABLE_TYPE_CHARS;
     }
   }
 
@@ -108,7 +112,7 @@ public final class Types {
     }
 
     public Set<TypeCharacteristics> typeCharacteristics() {
-      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+      return IMMUTABLE_TYPE_CHARS;
     }
   }
 
@@ -148,7 +152,7 @@ public final class Types {
     }
 
     public Set<TypeCharacteristics> typeCharacteristics() {
-      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+      return IMMUTABLE_TYPE_CHARS;
     }
   }
 
@@ -188,7 +192,7 @@ public final class Types {
     }
 
     public Set<TypeCharacteristics> typeCharacteristics() {
-      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+      return IMMUTABLE_TYPE_CHARS;
     }
   }
 
@@ -228,7 +232,7 @@ public final class Types {
     }
 
     public Set<TypeCharacteristics> typeCharacteristics() {
-      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+      return IMMUTABLE_TYPE_CHARS;
     }
   }
 
@@ -268,7 +272,7 @@ public final class Types {
     }
 
     public Set<TypeCharacteristics> typeCharacteristics() {
-      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+      return IMMUTABLE_TYPE_CHARS;
     }
   }
 
