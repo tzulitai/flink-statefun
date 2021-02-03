@@ -8,12 +8,12 @@ import org.apache.flink.statefun.sdk.java.types.Types;
 import org.apache.flink.statefun.sdk.reqreply.generated.TypedValue;
 
 final class MessageWrapper implements Message {
-  private final TypedValue transportMessage;
+  private final TypedValue typedValue;
   private final Address targetAddress;
 
-  MessageWrapper(Address targetAddress, TypedValue transportMessage) {
+  MessageWrapper(Address targetAddress, TypedValue typedValue) {
     this.targetAddress = Objects.requireNonNull(targetAddress);
-    this.transportMessage = Objects.requireNonNull(transportMessage);
+    this.typedValue = Objects.requireNonNull(typedValue);
   }
 
   @Override
@@ -83,13 +83,13 @@ final class MessageWrapper implements Message {
 
   @Override
   public <T> boolean is(Type<T> type) {
-    TypeName typeName = TypeName.typeNameFromString(transportMessage.getTypename());
+    TypeName typeName = TypeName.typeNameFromString(typedValue.getTypename());
     return Objects.equals(typeName, type.typeName());
   }
 
   @Override
   public <T> T as(Type<T> type) {
-    byte[] input = transportMessage.getValue().toByteArray();
+    byte[] input = typedValue.getValue().toByteArray();
     return type.typeSerializer().deserialize(input);
   }
 }

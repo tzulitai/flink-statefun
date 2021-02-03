@@ -1,6 +1,8 @@
 package org.apache.flink.statefun.sdk.java.types;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import java.util.EnumSet;
+import java.util.Set;
 import org.apache.flink.statefun.sdk.java.TypeName;
 import org.apache.flink.statefun.sdk.types.generated.BooleanWrapper;
 import org.apache.flink.statefun.sdk.types.generated.DoubleWrapper;
@@ -64,6 +66,10 @@ public final class Types {
     public TypeSerializer<Long> typeSerializer() {
       return serializer;
     }
+
+    public Set<TypeCharacteristics> typeCharacteristics() {
+      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+    }
   }
 
   private static final class LongTypeSerializer implements TypeSerializer<Long> {
@@ -99,6 +105,10 @@ public final class Types {
     @Override
     public TypeSerializer<String> typeSerializer() {
       return serializer;
+    }
+
+    public Set<TypeCharacteristics> typeCharacteristics() {
+      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
     }
   }
 
@@ -136,6 +146,10 @@ public final class Types {
     public TypeSerializer<Integer> typeSerializer() {
       return serializer;
     }
+
+    public Set<TypeCharacteristics> typeCharacteristics() {
+      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+    }
   }
 
   private static final class IntegerTypeSerializer implements TypeSerializer<Integer> {
@@ -171,6 +185,10 @@ public final class Types {
     @Override
     public TypeSerializer<Boolean> typeSerializer() {
       return serializer;
+    }
+
+    public Set<TypeCharacteristics> typeCharacteristics() {
+      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
     }
   }
 
@@ -208,6 +226,10 @@ public final class Types {
     public TypeSerializer<Float> typeSerializer() {
       return serializer;
     }
+
+    public Set<TypeCharacteristics> typeCharacteristics() {
+      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
+    }
   }
 
   private static final class FloatTypeSerializer implements TypeSerializer<Float> {
@@ -243,6 +265,10 @@ public final class Types {
     @Override
     public TypeSerializer<Double> typeSerializer() {
       return serializer;
+    }
+
+    public Set<TypeCharacteristics> typeCharacteristics() {
+      return EnumSet.of(TypeCharacteristics.IMMUTABLE_VALUES);
     }
   }
 

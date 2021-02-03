@@ -32,6 +32,21 @@ public class Gordon implements StatefulFunction {
   private static final ValueSpec<Timestamp> USER_DEFINED_PROTOBUF_VALUE =
       ValueSpec.named("user_json").withCustomType(USER_DEFINED_PROTOBUF_TYPE);
 
+  // - apply method signature: should that be with futures? or should there be a sync variant.
+  // - Type/ TypeSerializer interfaces: bytes? ... thread safety.
+  // - AddressScopedStorage threading, the usage of the serializer, lazy
+  // serialization/deserialization?.
+
+  // for each invocation:
+  //  apply(invocation)
+  //
+  // <------------------>
+  //
+  // Future applyBatch(invocations is list) {
+  //  invocation < -pop first from invocations
+  //  return apply(invocation).flatMap( unused -> applyBatch(invocations));
+  // }
+
   @Override
   public CompletableFuture<?> apply(Context context, Message argument) throws Throwable {
     // demo string message
@@ -49,6 +64,7 @@ public class Gordon implements StatefulFunction {
 
     // demo string
     String userName = storage.get(USER_NAME_VALUE).orElse("");
+
     storage.set(USER_NAME_VALUE, userName + "!");
 
     // demo complex state
