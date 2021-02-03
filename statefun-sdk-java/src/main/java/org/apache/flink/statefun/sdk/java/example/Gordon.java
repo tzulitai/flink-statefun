@@ -1,6 +1,7 @@
 package org.apache.flink.statefun.sdk.java.example;
 
 import static org.apache.flink.statefun.sdk.java.TypeName.typeNameFromString;
+import static org.apache.flink.statefun.sdk.java.types.SimpleType.simpleImmutableTypeFrom;
 
 import com.google.protobuf.Timestamp;
 import java.util.Optional;
@@ -12,7 +13,6 @@ import org.apache.flink.statefun.sdk.java.TypeName;
 import org.apache.flink.statefun.sdk.java.ValueSpec;
 import org.apache.flink.statefun.sdk.java.io.KafkaRecord;
 import org.apache.flink.statefun.sdk.java.message.Message;
-import org.apache.flink.statefun.sdk.java.types.SimpleType;
 import org.apache.flink.statefun.sdk.java.types.Type;
 
 public class Gordon implements StatefulFunction {
@@ -24,7 +24,7 @@ public class Gordon implements StatefulFunction {
   // imagine FromFunction is some user defined type
 
   private static final Type<Timestamp> USER_DEFINED_PROTOBUF_TYPE =
-      SimpleType.simpleTypeFrom(
+      simpleImmutableTypeFrom(
           typeNameFromString("com.igal/" + Timestamp.getDescriptor().getFullName()),
           Timestamp::toByteArray,
           Timestamp::parseFrom);
