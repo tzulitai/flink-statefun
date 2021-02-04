@@ -59,6 +59,8 @@ public class Gordon implements StatefulFunction {
     context.send(
         KafkaRecord.forEgress(KAFKA_EGRESS).withUtf8Key("foo").withUtf8Value("bar").build());
 
+    //    context.send(MessageBuilder.forAddress(null).withValue(1).build());
+
     // demo state
     AddressScopedStorage storage = context.storage();
 
