@@ -115,7 +115,7 @@ public final class MessageBuilder {
     }
     return TypedValue.newBuilder()
         .setTypename(message.valueTypeName().asTypeNameString())
-        .setValue(ByteString.copyFrom(message.rawValueBytes()));
+        .setValue(SliceProtobufUtil.asByteString(message.rawValue()));
   }
 
   private static ByteString asByteString(Slice slice) {

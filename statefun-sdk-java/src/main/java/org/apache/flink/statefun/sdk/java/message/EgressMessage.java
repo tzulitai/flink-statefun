@@ -18,13 +18,13 @@
 
 package org.apache.flink.statefun.sdk.java.message;
 
-import java.nio.ByteBuffer;
 import org.apache.flink.statefun.sdk.java.TypeName;
+import org.apache.flink.statefun.sdk.java.slice.Slice;
 
 public interface EgressMessage {
   TypeName targetEgressId();
 
   TypeName egressMessageValueType();
 
-  ByteBuffer egressMessageValueBytes();
+  Slice egressMessageValueBytes();
 }

@@ -17,7 +17,6 @@
  */
 package org.apache.flink.statefun.sdk.java.message;
 
-import java.nio.ByteBuffer;
 import java.util.Objects;
 import org.apache.flink.statefun.sdk.java.Address;
 import org.apache.flink.statefun.sdk.java.TypeName;
@@ -121,8 +120,8 @@ public final class MessageWrapper implements Message {
   }
 
   @Override
-  public ByteBuffer rawValueBytes() {
-    return typedValue.getValue().asReadOnlyByteBuffer();
+  public Slice rawValue() {
+    return SliceProtobufUtil.asSlice(typedValue.getValue());
   }
 
   TypedValue typedValue() {

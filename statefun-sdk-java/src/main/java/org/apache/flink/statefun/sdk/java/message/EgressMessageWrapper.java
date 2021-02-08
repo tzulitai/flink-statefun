@@ -17,9 +17,10 @@
  */
 package org.apache.flink.statefun.sdk.java.message;
 
-import java.nio.ByteBuffer;
 import java.util.Objects;
 import org.apache.flink.statefun.sdk.java.TypeName;
+import org.apache.flink.statefun.sdk.java.slice.Slice;
+import org.apache.flink.statefun.sdk.java.slice.SliceProtobufUtil;
 import org.apache.flink.statefun.sdk.reqreply.generated.TypedValue;
 
 public final class EgressMessageWrapper implements EgressMessage {
@@ -42,7 +43,7 @@ public final class EgressMessageWrapper implements EgressMessage {
   }
 
   @Override
-  public ByteBuffer egressMessageValueBytes() {
-    return typedValue.getValue().asReadOnlyByteBuffer();
+  public Slice egressMessageValueBytes() {
+    return SliceProtobufUtil.asSlice(typedValue.getValue());
   }
 }
