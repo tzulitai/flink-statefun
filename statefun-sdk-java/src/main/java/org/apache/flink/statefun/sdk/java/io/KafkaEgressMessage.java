@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.flink.statefun.sdk.java.io;
 
 import com.google.protobuf.ByteString;
@@ -5,19 +22,29 @@ import java.util.Objects;
 import org.apache.flink.statefun.sdk.egress.generated.KafkaProducerRecord;
 import org.apache.flink.statefun.sdk.java.TypeName;
 import org.apache.flink.statefun.sdk.java.message.EgressMessage;
-import org.apache.flink.statefun.sdk.java.message.TypedValueEgressMessage;
+import org.apache.flink.statefun.sdk.java.message.EgressMessageWrapper;
 import org.apache.flink.statefun.sdk.reqreply.generated.TypedValue;
 
-public final class KafkaRecord {
+public final class KafkaEgressMessage {
 
-  public static Builder forEgress(TypeName greetingsEgress) {
-    return new Builder();
+  public static Builder forEgress(TypeName targetEgressId) {
+    Objects.requireNonNull(targetEgressId);
+    return new Builder(targetEgressId);
   }
 
   public static final class Builder {
+    private static final ByteString KAFKA_PRODUCER_RECORD_TYPENAME =
+        ByteString.copyFromUtf8(
+            "type.googleapis.com/" + KafkaProducerRecord.getDescriptor().getFullName());
+
+    private final TypeName targetEgressId;
     private String targetTopic;
     private ByteString keyBytes;
     private ByteString value;
+
+    private Builder(TypeName targetEgressId) {
+      this.targetEgressId = targetEgressId;
+    }
 
     public Builder withTopic(String topic) {
       this.targetTopic = Objects.requireNonNull(topic);
@@ -63,11 +90,11 @@ public final class KafkaRecord {
       KafkaProducerRecord record = builder.build();
       TypedValue typedValue =
           TypedValue.newBuilder()
-              .setTypename("io.statefun.types/" + record.getDescriptorForType().getFullName())
+              .setTypenameBytes(KAFKA_PRODUCER_RECORD_TYPENAME)
               .setValue(record.toByteString())
               .build();
 
-      return new TypedValueEgressMessage(typedValue);
+      return new EgressMessageWrapper(targetEgressId, typedValue);
     }
   }
 }

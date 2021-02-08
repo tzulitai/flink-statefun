@@ -17,10 +17,33 @@
  */
 package org.apache.flink.statefun.sdk.java;
 
-import java.util.concurrent.CompletableFuture;
-import org.apache.flink.statefun.sdk.java.message.Message;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Supplier;
 
-public interface StatefulFunction {
+public final class StatefulFunctionSpec {
+  private final TypeName typeName;
+  private final List<ValueSpec<?>> knownValues;
+  private final Supplier<? extends StatefulFunction> supplier;
 
-  CompletableFuture<?> apply(Context context, Message argument) throws Throwable;
+  private StatefulFunctionSpec(
+      TypeName typeName,
+      List<ValueSpec<?>> knownValues,
+      Supplier<? extends StatefulFunction> supplier) {
+    this.typeName = Objects.requireNonNull(typeName);
+    this.supplier = Objects.requireNonNull(supplier);
+    this.knownValues = Objects.requireNonNull(knownValues);
+  }
+
+  public TypeName typeName() {
+    return typeName;
+  }
+
+  public List<ValueSpec<?>> knownValues() {
+    return knownValues;
+  }
+
+  public Supplier<? extends StatefulFunction> supplier() {
+    return supplier;
+  }
 }

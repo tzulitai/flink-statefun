@@ -17,10 +17,9 @@
  */
 package org.apache.flink.statefun.sdk.java;
 
-import java.util.concurrent.CompletableFuture;
 import org.apache.flink.statefun.sdk.java.message.Message;
 
-public interface StatefulFunction {
+public interface SynchronousStatefulFunction {
 
-  CompletableFuture<?> apply(Context context, Message argument) throws Throwable;
+  void apply(Context context, Message argument) throws Throwable;
 }

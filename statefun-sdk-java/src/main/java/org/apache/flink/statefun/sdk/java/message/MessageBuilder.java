@@ -1,3 +1,20 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.flink.statefun.sdk.java.message;
 
 import com.google.protobuf.ByteString;
@@ -10,13 +27,15 @@ import org.apache.flink.statefun.sdk.reqreply.generated.TypedValue;
 
 public final class MessageBuilder {
   private final TypedValue.Builder builder;
-  private final Address targetAddress;
+  private Address targetAddress;
 
   private MessageBuilder(TypeName functionType, String id) {
-    Objects.requireNonNull(functionType);
-    Objects.requireNonNull(id);
+    this(functionType, id, TypedValue.newBuilder());
+  }
+
+  private MessageBuilder(TypeName functionType, String id, TypedValue.Builder builder) {
     this.targetAddress = new Address(functionType, id);
-    this.builder = TypedValue.newBuilder();
+    this.builder = Objects.requireNonNull(builder);
   }
 
   public static MessageBuilder forAddress(TypeName functionType, String id) {
@@ -26,6 +45,12 @@ public final class MessageBuilder {
   public static MessageBuilder forAddress(Address address) {
     Objects.requireNonNull(address);
     return new MessageBuilder(address.type(), address.id());
+  }
+
+  public static MessageBuilder fromMessage(Message message) {
+    Address targetAddress = message.targetAddress();
+    TypedValue.Builder builder = typedValueBuilder(message);
+    return new MessageBuilder(targetAddress.type(), targetAddress.id(), builder);
   }
 
   public MessageBuilder withValue(long value) {
@@ -52,6 +77,15 @@ public final class MessageBuilder {
     return withCustomType(Types.doubleType(), value);
   }
 
+  public MessageBuilder withTargetAddress(Address targetAddress) {
+    this.targetAddress = Objects.requireNonNull(targetAddress);
+    return this;
+  }
+
+  public MessageBuilder withTargetAddress(TypeName typeName, String id) {
+    return withTargetAddress(new Address(typeName, id));
+  }
+
   public <T> MessageBuilder withCustomType(Type<T> customType, T element) {
     Objects.requireNonNull(customType);
     Objects.requireNonNull(element);
@@ -68,5 +102,15 @@ public final class MessageBuilder {
 
   public Message build() {
     return new MessageWrapper(targetAddress, builder.build());
+  }
+
+  private static TypedValue.Builder typedValueBuilder(Message message) {
+    if (message instanceof MessageWrapper) {
+      MessageWrapper messageWrapper = (MessageWrapper) message;
+      return messageWrapper.typedValue().toBuilder();
+    }
+    return TypedValue.newBuilder()
+        .setTypename(message.valueTypeName().asTypeNameString())
+        .setValue(ByteString.copyFrom(message.rawValueBytes()));
   }
 }

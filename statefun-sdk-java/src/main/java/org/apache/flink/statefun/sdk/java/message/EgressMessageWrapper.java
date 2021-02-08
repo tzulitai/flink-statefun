@@ -15,19 +15,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.flink.statefun.sdk.java.types;
+package org.apache.flink.statefun.sdk.java.message;
 
-import java.util.Collections;
-import java.util.Set;
+import java.nio.ByteBuffer;
+import java.util.Objects;
 import org.apache.flink.statefun.sdk.java.TypeName;
+import org.apache.flink.statefun.sdk.reqreply.generated.TypedValue;
 
-public interface Type<T> {
+public final class EgressMessageWrapper implements EgressMessage {
+  private final TypedValue typedValue;
+  private final TypeName targetEgressId;
 
-  TypeName typeName();
+  public EgressMessageWrapper(TypeName targetEgressId, TypedValue actualMessage) {
+    this.targetEgressId = Objects.requireNonNull(targetEgressId);
+    this.typedValue = Objects.requireNonNull(actualMessage);
+  }
 
-  TypeSerializer<T> typeSerializer();
+  @Override
+  public TypeName targetEgressId() {
+    return targetEgressId;
+  }
 
-  default Set<TypeCharacteristics> typeCharacteristics() {
-    return Collections.emptySet();
+  @Override
+  public TypeName egressMessageValueType() {
+    return TypeName.typeNameFromString(typedValue.getTypename());
+  }
+
+  @Override
+  public ByteBuffer egressMessageValueBytes() {
+    return typedValue.getValue().asReadOnlyByteBuffer();
   }
 }
