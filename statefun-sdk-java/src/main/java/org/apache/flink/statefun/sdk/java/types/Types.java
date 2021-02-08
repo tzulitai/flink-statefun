@@ -17,11 +17,16 @@
  */
 package org.apache.flink.statefun.sdk.java.types;
 
+import static org.apache.flink.statefun.sdk.java.slice.SliceProtobufUtil.parseFrom;
+import static org.apache.flink.statefun.sdk.java.slice.SliceProtobufUtil.toSlice;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import org.apache.flink.statefun.sdk.java.TypeName;
+import org.apache.flink.statefun.sdk.java.slice.Slice;
+import org.apache.flink.statefun.sdk.java.slice.Slices;
 import org.apache.flink.statefun.sdk.types.generated.BooleanWrapper;
 import org.apache.flink.statefun.sdk.types.generated.DoubleWrapper;
 import org.apache.flink.statefun.sdk.types.generated.FloatWrapper;
@@ -97,16 +102,16 @@ public final class Types {
   private static final class LongTypeSerializer implements TypeSerializer<Long> {
 
     @Override
-    public byte[] serialize(Long element) {
+    public Slice serialize(Long element) {
       LongWrapper wrapper = LongWrapper.newBuilder().setValue(element).build();
-      return wrapper.toByteArray();
+      return toSlice(wrapper);
     }
 
     @Override
-    public Long deserialize(byte[] input) {
+    public Long deserialize(Slice input) {
       try {
-        LongWrapper wrapper = LongWrapper.parseFrom(input);
-        return wrapper.getValue();
+        LongWrapper longWrapper = parseFrom(LongWrapper.parser(), input);
+        return longWrapper.getValue();
       } catch (InvalidProtocolBufferException e) {
         throw new IllegalArgumentException(e);
       }
@@ -137,15 +142,15 @@ public final class Types {
   private static final class StringTypeSerializer implements TypeSerializer<String> {
 
     @Override
-    public byte[] serialize(String element) {
+    public Slice serialize(String element) {
       StringWrapper wrapper = StringWrapper.newBuilder().setValue(element).build();
-      return wrapper.toByteArray();
+      return Slices.wrap(wrapper.toByteArray());
     }
 
     @Override
-    public String deserialize(byte[] input) {
+    public String deserialize(Slice input) {
       try {
-        StringWrapper wrapper = StringWrapper.parseFrom(input);
+        StringWrapper wrapper = parseFrom(StringWrapper.parser(), input);
         return wrapper.getValue();
       } catch (InvalidProtocolBufferException e) {
         throw new IllegalArgumentException(e);
@@ -177,15 +182,15 @@ public final class Types {
   private static final class IntegerTypeSerializer implements TypeSerializer<Integer> {
 
     @Override
-    public byte[] serialize(Integer element) {
+    public Slice serialize(Integer element) {
       IntWrapper wrapper = IntWrapper.newBuilder().setValue(element).build();
-      return wrapper.toByteArray();
+      return toSlice(wrapper);
     }
 
     @Override
-    public Integer deserialize(byte[] input) {
+    public Integer deserialize(Slice input) {
       try {
-        IntWrapper wrapper = IntWrapper.parseFrom(input);
+        IntWrapper wrapper = parseFrom(IntWrapper.parser(), input);
         return wrapper.getValue();
       } catch (InvalidProtocolBufferException e) {
         throw new IllegalArgumentException(e);
@@ -217,15 +222,15 @@ public final class Types {
   private static final class BooleanTypeSerializer implements TypeSerializer<Boolean> {
 
     @Override
-    public byte[] serialize(Boolean element) {
+    public Slice serialize(Boolean element) {
       BooleanWrapper wrapper = BooleanWrapper.newBuilder().setValue(element).build();
-      return wrapper.toByteArray();
+      return toSlice(wrapper);
     }
 
     @Override
-    public Boolean deserialize(byte[] input) {
+    public Boolean deserialize(Slice input) {
       try {
-        BooleanWrapper wrapper = BooleanWrapper.parseFrom(input);
+        BooleanWrapper wrapper = parseFrom(BooleanWrapper.parser(), input);
         return wrapper.getValue();
       } catch (InvalidProtocolBufferException e) {
         throw new IllegalArgumentException(e);
@@ -257,15 +262,15 @@ public final class Types {
   private static final class FloatTypeSerializer implements TypeSerializer<Float> {
 
     @Override
-    public byte[] serialize(Float element) {
+    public Slice serialize(Float element) {
       FloatWrapper wrapper = FloatWrapper.newBuilder().setValue(element).build();
-      return wrapper.toByteArray();
+      return toSlice(wrapper);
     }
 
     @Override
-    public Float deserialize(byte[] input) {
+    public Float deserialize(Slice input) {
       try {
-        FloatWrapper wrapper = FloatWrapper.parseFrom(input);
+        FloatWrapper wrapper = parseFrom(FloatWrapper.parser(), input);
         return wrapper.getValue();
       } catch (InvalidProtocolBufferException e) {
         throw new IllegalArgumentException(e);
@@ -297,15 +302,15 @@ public final class Types {
   private static final class DoubleTypeSerializer implements TypeSerializer<Double> {
 
     @Override
-    public byte[] serialize(Double element) {
+    public Slice serialize(Double element) {
       DoubleWrapper wrapper = DoubleWrapper.newBuilder().setValue(element).build();
-      return wrapper.toByteArray();
+      return toSlice(wrapper);
     }
 
     @Override
-    public Double deserialize(byte[] input) {
+    public Double deserialize(Slice input) {
       try {
-        DoubleWrapper wrapper = DoubleWrapper.parseFrom(input);
+        DoubleWrapper wrapper = parseFrom(DoubleWrapper.parser(), input);
         return wrapper.getValue();
       } catch (InvalidProtocolBufferException e) {
         throw new IllegalArgumentException(e);

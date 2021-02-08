@@ -18,10 +18,14 @@
 package org.apache.flink.statefun.sdk.java.message;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.MoreByteStrings;
 import java.util.Objects;
 import org.apache.flink.statefun.sdk.java.Address;
 import org.apache.flink.statefun.sdk.java.TypeName;
+import org.apache.flink.statefun.sdk.java.slice.ByteStringSlice;
+import org.apache.flink.statefun.sdk.java.slice.Slice;
 import org.apache.flink.statefun.sdk.java.types.Type;
+import org.apache.flink.statefun.sdk.java.types.TypeSerializer;
 import org.apache.flink.statefun.sdk.java.types.Types;
 import org.apache.flink.statefun.sdk.reqreply.generated.TypedValue;
 
@@ -90,8 +94,9 @@ public final class MessageBuilder {
     Objects.requireNonNull(customType);
     Objects.requireNonNull(element);
     try {
-      byte[] valueBytes = customType.typeSerializer().serialize(element);
-      ByteString byteString = ByteString.copyFrom(valueBytes);
+      TypeSerializer<T> typeSerializer = customType.typeSerializer();
+      Slice slice = typeSerializer.serialize(element);
+      ByteString byteString = asByteString(slice);
       builder.setTypename(customType.typeName().asTypeNameString());
       builder.setValue(byteString);
       return this;
@@ -112,5 +117,13 @@ public final class MessageBuilder {
     return TypedValue.newBuilder()
         .setTypename(message.valueTypeName().asTypeNameString())
         .setValue(ByteString.copyFrom(message.rawValueBytes()));
+  }
+
+  private static ByteString asByteString(Slice slice) {
+    if (slice instanceof ByteStringSlice) {
+      ByteStringSlice byteStringSlice = (ByteStringSlice) slice;
+      return byteStringSlice.byteString();
+    }
+    return MoreByteStrings.wrap(slice.asReadOnlyByteBuffer());
   }
 }

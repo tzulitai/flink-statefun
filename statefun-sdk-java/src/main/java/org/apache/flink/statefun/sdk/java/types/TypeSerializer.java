@@ -17,9 +17,11 @@
  */
 package org.apache.flink.statefun.sdk.java.types;
 
+import org.apache.flink.statefun.sdk.java.slice.Slice;
+
 public interface TypeSerializer<T> {
 
-  byte[] serialize(T value); // TODO: switch to ByteBuffer
+  Slice serialize(T value); // TODO: switch to ByteBuffer
 
-  T deserialize(byte[] bytes);
+  T deserialize(Slice bytes);
 }

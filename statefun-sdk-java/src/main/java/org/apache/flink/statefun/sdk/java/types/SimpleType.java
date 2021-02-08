@@ -22,12 +22,13 @@ import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
 import org.apache.flink.statefun.sdk.java.TypeName;
+import org.apache.flink.statefun.sdk.java.slice.Slice;
+import org.apache.flink.statefun.sdk.java.slice.Slices;
 
 public final class SimpleType<T> implements Type<T> {
 
   @FunctionalInterface
   public interface Fn<I, O> {
-
     O apply(I input) throws Throwable;
   }
 
@@ -81,18 +82,18 @@ public final class SimpleType<T> implements Type<T> {
     }
 
     @Override
-    public byte[] serialize(T value) {
+    public Slice serialize(T value) {
       try {
-        return serialize.apply(value);
+        return Slices.wrap(serialize.apply(value));
       } catch (Throwable throwable) {
         throw new IllegalStateException(throwable);
       }
     }
 
     @Override
-    public T deserialize(byte[] bytes) {
+    public T deserialize(Slice input) {
       try {
-        return deserialize.apply(bytes);
+        return deserialize.apply(input.toByteArray());
       } catch (Throwable throwable) {
         throw new IllegalStateException(throwable);
       }
