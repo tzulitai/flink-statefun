@@ -84,7 +84,8 @@ public final class SimpleType<T> implements Type<T> {
     @Override
     public Slice serialize(T value) {
       try {
-        return Slices.wrap(serialize.apply(value));
+        byte[] bytes = serialize.apply(value);
+        return Slices.wrap(bytes);
       } catch (Throwable throwable) {
         throw new IllegalStateException(throwable);
       }
@@ -93,7 +94,8 @@ public final class SimpleType<T> implements Type<T> {
     @Override
     public T deserialize(Slice input) {
       try {
-        return deserialize.apply(input.toByteArray());
+        byte[] bytes = input.toByteArray();
+        return deserialize.apply(bytes);
       } catch (Throwable throwable) {
         throw new IllegalStateException(throwable);
       }
