@@ -19,7 +19,6 @@ package org.apache.flink.statefun.sdk.java.slice;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.MoreByteStrings;
-
 import java.nio.ByteBuffer;
 
 public final class Slices {

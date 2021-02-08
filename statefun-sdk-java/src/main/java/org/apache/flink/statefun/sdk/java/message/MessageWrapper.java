@@ -21,8 +21,8 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 import org.apache.flink.statefun.sdk.java.Address;
 import org.apache.flink.statefun.sdk.java.TypeName;
-import org.apache.flink.statefun.sdk.java.slice.ByteStringSlice;
 import org.apache.flink.statefun.sdk.java.slice.Slice;
+import org.apache.flink.statefun.sdk.java.slice.SliceProtobufUtil;
 import org.apache.flink.statefun.sdk.java.types.Type;
 import org.apache.flink.statefun.sdk.java.types.TypeSerializer;
 import org.apache.flink.statefun.sdk.java.types.Types;
@@ -111,7 +111,7 @@ public final class MessageWrapper implements Message {
   @Override
   public <T> T as(Type<T> type) {
     TypeSerializer<T> typeSerializer = type.typeSerializer();
-    Slice input = new ByteStringSlice(typedValue.getValue());
+    Slice input = SliceProtobufUtil.asSlice(typedValue.getValue());
     return typeSerializer.deserialize(input);
   }
 

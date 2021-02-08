@@ -18,12 +18,11 @@
 package org.apache.flink.statefun.sdk.java.message;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.MoreByteStrings;
 import java.util.Objects;
 import org.apache.flink.statefun.sdk.java.Address;
 import org.apache.flink.statefun.sdk.java.TypeName;
-import org.apache.flink.statefun.sdk.java.slice.ByteStringSlice;
 import org.apache.flink.statefun.sdk.java.slice.Slice;
+import org.apache.flink.statefun.sdk.java.slice.SliceProtobufUtil;
 import org.apache.flink.statefun.sdk.java.types.Type;
 import org.apache.flink.statefun.sdk.java.types.TypeSerializer;
 import org.apache.flink.statefun.sdk.java.types.Types;
@@ -120,10 +119,6 @@ public final class MessageBuilder {
   }
 
   private static ByteString asByteString(Slice slice) {
-    if (slice instanceof ByteStringSlice) {
-      ByteStringSlice byteStringSlice = (ByteStringSlice) slice;
-      return byteStringSlice.byteString();
-    }
-    return MoreByteStrings.wrap(slice.asReadOnlyByteBuffer());
+    return SliceProtobufUtil.asByteString(slice);
   }
 }

@@ -20,6 +20,7 @@ package org.apache.flink.statefun.sdk.java.slice;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
+import com.google.protobuf.MoreByteStrings;
 import com.google.protobuf.Parser;
 
 public class SliceProtobufUtil {
@@ -36,5 +37,17 @@ public class SliceProtobufUtil {
 
   public static Slice toSlice(Message message) {
     return Slices.wrap(message.toByteArray());
+  }
+
+  public static ByteString asByteString(Slice slice) {
+    if (slice instanceof ByteStringSlice) {
+      ByteStringSlice byteStringSlice = (ByteStringSlice) slice;
+      return byteStringSlice.byteString();
+    }
+    return MoreByteStrings.wrap(slice.asReadOnlyByteBuffer());
+  }
+
+  public static Slice asSlice(ByteString byteString) {
+    return new ByteStringSlice(byteString);
   }
 }
