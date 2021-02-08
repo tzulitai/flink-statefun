@@ -17,19 +17,24 @@
  */
 package org.apache.flink.statefun.sdk.java.slice;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class SliceBuilder {
+public final class SliceOutput {
   private byte[] buf;
   private int position;
 
-  private SliceBuilder(int initialSize) {
+  public static SliceOutput sliceOutput(int initialSize) {
+    return new SliceOutput(initialSize);
+  }
+
+  private SliceOutput(int initialSize) {
     this.buf = new byte[initialSize];
     this.position = 0;
   }
 
-  public void put(byte[] buffer, int offset, int len) {
+  public void write(byte[] buffer, int offset, int len) {
     Objects.requireNonNull(buffer);
     if (offset < 0 || offset > buffer.length) {
       throw new IllegalArgumentException("Offset out of range " + offset);
@@ -42,7 +47,17 @@ public final class SliceBuilder {
     position += len;
   }
 
-  public Slice build() {
+  public void write(ByteBuffer buffer) {
+    int n = buffer.remaining();
+    ensureCapacity(position + n);
+    buffer.get(buf, position, n);
+  }
+
+  public void write(Slice slice) {
+    write(slice.asReadOnlyByteBuffer());
+  }
+
+  public Slice copyOf() {
     return Slices.copyOf(buf, 0, position);
   }
 
@@ -54,9 +69,9 @@ public final class SliceBuilder {
     position = 0;
   }
 
-  private void ensureCapacity(int newLength) {
-    if (newLength <= buf.length) {
-      this.buf = Arrays.copyOf(buf, 2 * newLength);
+  private void ensureCapacity(int requiredNewLength) {
+    if (requiredNewLength >= buf.length) {
+      this.buf = Arrays.copyOf(buf, 2 * requiredNewLength);
     }
   }
 }
