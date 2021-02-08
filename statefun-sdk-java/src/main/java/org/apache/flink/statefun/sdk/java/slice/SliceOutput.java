@@ -61,10 +61,6 @@ public final class SliceOutput {
     return Slices.copyOf(buf, 0, position);
   }
 
-  public Slice asSlice() {
-    return Slices.wrap(buf, 0, position);
-  }
-
   public void reset() {
     position = 0;
   }
