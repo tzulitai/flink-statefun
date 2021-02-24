@@ -28,7 +28,7 @@ under the License.
     <artifactId>statefun-smoke-e2e</artifactId>
 
     <properties>
-        <testcontainers.version>1.15.1</testcontainers.version>
+        <testcontainers.version>1.15.2</testcontainers.version>
         <commons-math3.version>3.5</commons-math3.version>
         <additional-sources.dir>target/additional-sources</additional-sources.dir>
     </properties>

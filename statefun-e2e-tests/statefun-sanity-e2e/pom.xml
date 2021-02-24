@@ -28,7 +28,7 @@ under the License.
     <artifactId>statefun-sanity-e2e</artifactId>
 
     <properties>
-        <testcontainers.version>1.15.1</testcontainers.version>
+        <testcontainers.version>1.15.2</testcontainers.version>
     </properties>
 
     <dependencies>
