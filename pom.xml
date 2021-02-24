@@ -53,6 +53,7 @@ under the License.
         <module>statefun-sdk</module>
         <module>statefun-sdk-protos</module>
         <module>statefun-sdk-java</module>
+        <module>statefun-protocol-java</module>
         <module>statefun-kafka-io</module>
         <module>statefun-kinesis-io</module>
         <module>statefun-examples</module>
